@@ -4,16 +4,17 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <gc/gc.h>
 
 struct CPU6502 cpu;
 struct MEM6502 mem;
 
 void init_cpu()
 {
-    mem.ram = malloc(256 * sizeof(uint8_t));
+    mem.ram = GC_malloc(256 * sizeof(uint8_t));
     // TODO: inicializar stack pointer
     for (int i = 0; i < 256; ++i) {
-        mem.ram[i] = malloc(256 * sizeof(uint8_t));
+        mem.ram[i] = GC_malloc(256 * sizeof(uint8_t));
         for (int j = 0; j < 256; ++j) {
             mem.ram[i][j] = 0;
         }
@@ -25,11 +26,11 @@ void run_program()
     // end the program once the PC points to null memory
     uint8_t op_ind;
     while (mem.ram[cpu.pch][cpu.pcl] != 0x00) {
-//        print_cpu();
+        print_cpu();
         op_ind = fetch();
         execute(op_ind);
     }
-//    print_cpu();
+    print_cpu();
 }
 
 void load_file(const char* filename)
@@ -62,13 +63,6 @@ void load_file(const char* filename)
         }
     }
     fclose(file);
-}
-
-void free_cpu()
-{
-    for (int i = 0; i < 256; ++i) {
-        free(mem.ram[i]);
-    }
 }
 
 void print_ram()

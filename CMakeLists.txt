@@ -5,6 +5,8 @@ project(mos6502 C)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/instr)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_library(gc gc)
+
 add_executable(cpu main.c init.c init.h pipeline.c pipeline.h
         instr/adc.c
         instr/adc.h
@@ -55,4 +57,4 @@ add_executable(cpu main.c init.c init.h pipeline.c pipeline.h
         instr/inc.c
         instr/inc.h)
 
-target_link_libraries(cpu)
+target_link_libraries(cpu gc)

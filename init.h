@@ -4,7 +4,6 @@
 void init_cpu();
 void load_file(const char* filename);
 void print_ram();
-void free_cpu();
 void run_program();
 void print_cpu();
 

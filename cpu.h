@@ -1,7 +1,7 @@
 #ifndef MOS6502_CPU_H
 #define MOS6502_CPU_H
 
-#include <stdint.h>
+#include <inttypes.h>
 
 struct CPU6502 {
     uint8_t a;
