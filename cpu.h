@@ -22,4 +22,8 @@ struct MEM6502 {
 extern struct CPU6502 cpu;
 extern struct MEM6502 mem;
 
+void setsr(int bit);
+void unsetsr(int bit);
+int getsr(int bit);
+
 #endif

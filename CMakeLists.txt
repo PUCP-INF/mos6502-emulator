@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.17)
 
 project(mos6502 C)
 
-find_package(SDL2 REQUIRED)
-find_library(GC Gc)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/instr)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -58,4 +55,4 @@ add_executable(cpu main.c init.c init.h pipeline.c pipeline.h
         instr/inc.c
         instr/inc.h)
 
-target_link_libraries(cpu SDL2::SDL2 gc)
+target_link_libraries(cpu)

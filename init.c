@@ -25,12 +25,11 @@ void run_program()
     // end the program once the PC points to null memory
     uint8_t op_ind;
     while (mem.ram[cpu.pch][cpu.pcl] != 0x00) {
-        print_cpu();
-        print_ram();
+//        print_cpu();
         op_ind = fetch();
         execute(op_ind);
     }
-    print_cpu();
+//    print_cpu();
 }
 
 void load_file(const char* filename)
@@ -88,7 +87,33 @@ void print_ram()
 
 void print_cpu()
 {
-    uint8_t opcode = mem.ram[cpu.pch][cpu.pcl];
-    printf("%02x\n", opcode);
+//    uint8_t opcode = mem.ram[cpu.pch][cpu.pcl];
+//    printf("%02x\n", opcode);
     printf("A:%02x  X:%02x  Y:%02x\n", cpu.a, cpu.x, cpu.y);
+    uint8_t sr = cpu.sr;
+    // status register
+    printf("carry: %d\n", getsr(0));
+    printf("zero: %d\n", getsr(1));
+    printf("int: %d\n", getsr(2));
+    printf("decimal: %d\n", getsr(3));
+    printf("break: %d\n", getsr(4));
+    printf("overflow: %d\n", getsr(6));
+    printf("negative: %d\n", getsr(7));
+    print_ram();
+}
+
+void setsr(int bit)
+{
+    cpu.sr |= 1UL << bit;
+}
+
+void unsetsr(int bit)
+{
+    cpu.sr &= ~(1UL << bit);
+}
+
+int getsr(int bit)
+{
+    uint8_t sr = cpu.sr;
+    return (sr >> bit) & 0x01;
 }
