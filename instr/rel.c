@@ -5,25 +5,74 @@
 #include "rel.h"
 #include "cpu.h"
 
-void bpl()
-{}
+void bpl()/* Branch on Result Plus*/
+{
+    int8_t offset = get_arg(1);
+    if (!getsr(7)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+}
 
-void bmi()
-{}
+void bmi() /*Branch on Result Minus*/
+{
+    int8_t offset = get_arg(1);
+    if (getsr(7)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
 
-void bvc()
-{}
+}
 
-void bvs()
-{}
+void bvc() /*Branch on Overflow Clear*/
+{
+    int8_t offset = get_arg(1);
+    if (!getsr(6)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+}
 
-void bcc()
-{}
+void bvs() /*Branch on Overflow Set*/
+{
+    int8_t offset = get_arg(1);
+    if (getsr(6)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+}
 
-void bcs()
-{}
+void bcc() /*Branch on Carry Clear*/
+{
+    int8_t offset = get_arg(1);
+    if (!getsr(0)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+}
 
-void bne()
+void bcs() /*Branch on Carry Set*/
+{
+    int8_t offset = get_arg(1);
+    if (getsr(0)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+}
+
+void bne() /*Branch on Result not Zero*/
 {
     int8_t offset = get_arg(1);
     if (!getsr(1)) {
@@ -34,5 +83,16 @@ void bne()
     }
 }
 
-void beq()
-{}
+void beq() /*Branch on Result Zero*/
+{
+    int8_t offset = get_arg(1);
+    if (getsr(1)) {
+        cpu.pcl += offset;
+        if (offset < 0) {
+            cpu.pcl -= 2;
+        }
+    }
+
+
+}
+
