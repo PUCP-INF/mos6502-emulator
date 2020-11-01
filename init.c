@@ -70,7 +70,7 @@ void print_ram()
     printf("\n");
     for (int j = 0; j < 256; ++j) {
         printf("%02x ", mem.ram[0][j]);
-        if ((j + 1) % 32 == 0) printf("\n");
+        if ((j+1) % 16 == 0) printf("\n");
     }
     printf("\n");
 }

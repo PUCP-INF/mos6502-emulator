@@ -3,7 +3,7 @@
 //
 
 #include "impl.h"
-#include <stdio.h>
+#include "cpu.h"
 
 void brk()
 {}
@@ -51,13 +51,17 @@ void clv()
 {}
 
 void iny()
-{}
+{
+    cpu.y++;
+}
 
 void cld()
 {}
 
 void inx()
-{}
+{
+    cpu.x++;
+}
 
 void sed()
 {}
