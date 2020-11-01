@@ -15,6 +15,8 @@ add_executable(cpu
         pipeline.h
         cpu.c
         cpu.h
+        debug.c
+        debug.h
         instr/adc.c
         instr/adc.h
         instr/and.c

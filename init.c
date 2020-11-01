@@ -1,6 +1,7 @@
 #include "init.h"
 #include "cpu.h"
 #include "pipeline.h"
+#include "debug.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -12,13 +13,13 @@ struct MEM6502 mem;
 void init_cpu()
 {
     mem.ram = GC_malloc(256 * sizeof(uint8_t));
+    cpu.sp = 0xff;
     for (int i = 0; i < 256; ++i) {
         mem.ram[i] = GC_malloc(256 * sizeof(uint8_t));
         for (int j = 0; j < 256; ++j) {
             mem.ram[i][j] = 0;
         }
     }
-    mem.ram[1][0] = cpu.sp;
 }
 
 void run_program()
@@ -26,11 +27,12 @@ void run_program()
     // end the program once the PC points to null memory
     uint8_t op_ind;
     while (mem.ram[cpu.pch][cpu.pcl] != 0x00) {
-//        print_cpu();
+        print_cpu();
+        print_stack();
         op_ind = fetch();
         execute(op_ind);
     }
-    print_cpu();
+    info_cpu();
 }
 
 void load_file(const char* filename)
