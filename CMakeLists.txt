@@ -7,7 +7,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_library(gc gc)
 
-add_executable(cpu main.c init.c init.h pipeline.c pipeline.h
+add_executable(cpu
+        main.c
+        init.c
+        init.h
+        pipeline.c
+        pipeline.h
+        cpu.c
+        cpu.h
         instr/adc.c
         instr/adc.h
         instr/and.c
