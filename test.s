@@ -1,8 +1,17 @@
 !to "test.o", cbm
 * = $0200
 
-lda #$12
-sta $03
-inc $03
-;lda #$15
-lda $03
+lda #$05
+cmp $01
+bne xd
+
+inc $01
+inc $01
+inc $01
+
+xd
+
+;loop
+;        inc $01
+;        cmp $01
+;        bne loop
