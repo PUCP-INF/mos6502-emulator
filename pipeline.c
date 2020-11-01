@@ -34,10 +34,20 @@ int fetch()
 
 void execute(int op_ind)
 {
+    cpu.pcu = 0;
     uint8_t num = opcode_bytes[op_ind];
     void (*func) (void) = opcode_func[op_ind];
     func();
-    cpu.pcl += num;
+    updatepc(num);
+}
+
+void updatepc(uint8_t numbytes)
+{
+    if (!cpu.pcu) {
+        // TODO: verificar que no nos salgamos de la pagina
+        cpu.pcu = 0;
+        cpu.pcl += numbytes;
+    }
 }
 
 // look up table

@@ -13,6 +13,8 @@ struct CPU6502 {
 
     uint8_t sp;
     uint8_t sr;
+
+    uint8_t pcu;
 };
 
 struct MEM6502 {
