@@ -1,19 +1,10 @@
 !to "test", cbm
 * = $0200
 
-start:
-    lda #$10
-    beq loop
-    sta $10
-    inc $10
-    inc $10
-    inc $10
-    inc $10
-    inc $10
-
-loop:
-    inc $10
-
-
-
-
+lda #$35
+sta $00
+pha
+inc $00
+inc $00
+lda $00
+pla

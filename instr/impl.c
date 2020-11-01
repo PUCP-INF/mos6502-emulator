@@ -15,25 +15,33 @@ void rts()
 {}
 
 void php()
-{}
+{
+    push(cpu.sr);
+}
 
 void clc()
 {}
 
 void plp()
-{}
+{
+    cpu.sr = pop();
+}
 
 void sec()
 {}
 
 void pha()
-{}
+{
+    push(cpu.a);
+}
 
 void cli()
 {}
 
 void pla()
-{}
+{
+    cpu.a = pop();
+}
 
 void sei()
 {}
@@ -70,13 +78,17 @@ void txa()
 {}
 
 void txs()
-{}
+{
+    cpu.sp = cpu.x;
+}
 
 void tax()
 {}
 
 void tsx()
-{}
+{
+    cpu.x = cpu.sp;
+}
 
 void dex()
 {}
