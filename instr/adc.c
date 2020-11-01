@@ -5,7 +5,9 @@
 #include "adc.h"
 
 void adcxind()
-{}
+{
+    //comentario añadido de prueba para pull
+}
 
 void adczpg()
 {}
