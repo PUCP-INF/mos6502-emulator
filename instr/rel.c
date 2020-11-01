@@ -85,7 +85,6 @@ void bne() /*Branch on Result not Zero*/
 
 void beq() /*Branch on Result Zero*/
 {
-    setsr(1);
     int8_t offset = get_arg(1);
     if (getsr(1)) {
         cpu.pcl += offset;
