@@ -44,8 +44,7 @@ void execute(int op_ind)
 void updatepc(uint8_t numbytes)
 {
     if (!cpu.pcu) {
-        // TODO: verificar que no nos salgamos de la pagina
-        cpu.pcu = 0;
+        if ((int)cpu.pcl + numbytes > 0xff) cpu.pch += 1;
         cpu.pcl += numbytes;
     }
 }
