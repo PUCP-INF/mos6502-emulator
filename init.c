@@ -27,12 +27,9 @@ void run_program()
     // end the program once the PC points to null memory
     uint8_t op_ind;
     while (mem.ram[cpu.pch][cpu.pcl] != 0x00) {
-        print_cpu();
-        print_stack();
         op_ind = fetch();
         execute(op_ind);
     }
-    info_cpu();
 }
 
 void load_file(const char* filename)

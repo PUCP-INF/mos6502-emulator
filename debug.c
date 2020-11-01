@@ -15,7 +15,7 @@ void print_ram()
 void print_stack()
 {
     printf("\nSTACK: ");
-    for (int i = cpu.sp + 1; i != 256; ++i) {
+    for (int i = 255; i != cpu.sp; --i) {
         printf("%02x ", mem.ram[1][i]);
     }
     printf("\n");
@@ -23,6 +23,7 @@ void print_stack()
 
 void print_cpu()
 {
+//    printf("\nOP = %02x\n", mem.ram[cpu.pch][cpu.pcl]);
     printf("\nA = %02x\t\tC Z I D B V N\nX = %02x\t\t%d %d %d %d %d %d %d\nY = %02x\n",
            cpu.a, cpu.x,
            getsr(0), getsr(1), getsr(2), getsr(3), getsr(4), getsr(6), getsr(7),
