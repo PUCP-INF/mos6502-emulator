@@ -14,7 +14,11 @@ void cmpindy()
 void cmpzpg()
 {
     uint8_t offset = get_arg(1), value = mem.ram[0][offset];
-    if (cpu.a == value) setsr(2);
+    if (cpu.a == value) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
 }
 
 void cmpzpgx()
