@@ -25,5 +25,6 @@ extern struct MEM6502 mem;
 void setsr(int bit);
 void unsetsr(int bit);
 int getsr(int bit);
+uint8_t get_arg(int n);
 
 #endif

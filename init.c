@@ -111,3 +111,16 @@ int getsr(int bit)
     uint8_t sr = cpu.sr;
     return (sr >> bit) & 0x01;
 }
+
+/*
+ * 255 256 257
+ * OP  A1  A2
+ */
+
+uint8_t get_arg(int n)
+{
+    uint8_t low = cpu.pcl, high = cpu.pch;
+    if (low + n > 0xff) high += 1;
+    low += n;
+    return mem.ram[high][low];
+}

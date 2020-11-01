@@ -14,14 +14,7 @@ void ldaindy()
 
 void ldazpg()
 {
-    uint8_t low = cpu.pcl, high = cpu.pch;
-    if (low + 1 > 0xff) {
-        low = 0;
-        high += 1;
-    } else {
-        low += 1;
-    }
-    uint8_t offset = mem.ram[high][low];
+    uint8_t offset = get_arg(1);
     cpu.a = mem.ram[0][offset];
 }
 
@@ -30,7 +23,7 @@ void ldazpgx()
 
 void ldaimm()
 {
-    cpu.a = mem.ram[cpu.pch][cpu.pcl + 1];
+    cpu.a = get_arg(1);
 }
 
 void ldaabsy()

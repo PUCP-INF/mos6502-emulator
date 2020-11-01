@@ -11,7 +11,7 @@ void staxind()
 
 void stazpg()
 {
-    uint8_t offset = mem.ram[cpu.pch][cpu.pcl+1];
+    uint8_t offset = get_arg(1);
     mem.ram[0][offset] = cpu.a;
 }
 

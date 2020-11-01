@@ -7,14 +7,7 @@
 
 void inczpg()
 {
-    uint8_t low = cpu.pcl, high = cpu.pch;
-    if (low + 1 > 0xff) {
-        high += 1;
-        low = 0;
-    } else {
-        low += 1;
-    }
-    uint8_t offset = mem.ram[high][low];
+    uint8_t offset = get_arg(1);
     mem.ram[0][offset] += 1;
 }
 
