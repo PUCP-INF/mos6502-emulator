@@ -23,10 +23,10 @@ void rolzpg()
     else
         unsetsr(1);
 
-    if(elem>127)
-        setsr(6);
+    if(elem & 0b10000000)
+        setsr(7);
     else
-        unsetsr(6);
+        unsetsr(7);
 
     mem.ram[0][offset]=elem;
 
@@ -52,10 +52,10 @@ void rolzpgx()
         elem<<=1;
     }
 
-    if(elem>127)
-        setsr(6);
+    if(elem & 0b10000000)
+        setsr(7);
     else
-        unsetsr(6);
+        unsetsr(7);
 
 
     mem.ram[0][offset]=elem;
