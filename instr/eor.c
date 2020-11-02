@@ -51,7 +51,7 @@ void eorindy()
     uint8_t dm = get_arg(1);
     uint8_t high=mem.ram[0][dm+1];
     uint8_t low=mem.ram[0][dm];
-    uint16_t offset =high*256+low+cpu.y;
+    uint16_t offset =(high<<8)+low+cpu.y;
     cpu.a ^=mem.ram[offset>>8][offset & 0XFF];
 
     if(!cpu.a)
