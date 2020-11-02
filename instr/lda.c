@@ -27,7 +27,9 @@ void ldaimm()
 }
 
 void ldaabsy()
-{}
+{
+    cpu.x=mem.ram[get_arg(2)][get_arg(1)]+cpu.y;
+}
 
 void ldaabs()
 {}

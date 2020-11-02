@@ -67,19 +67,29 @@ void sed()
 {}
 
 void txa()
-{}
+{
+    cpu.a=cpu.x;
+}
 
 void txs()
-{}
+{
+    cpu.sr=cpu.x;
+}
 
 void tax()
-{}
+{
+    cpu.x=cpu.a;
+}
 
 void tsx()
-{}
+{
+    cpu.x=cpu.sr;
+}
 
 void dex()
-{}
+{
+    cpu.x--;
+}
 
 void nop()
 {}
