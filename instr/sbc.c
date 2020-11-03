@@ -34,7 +34,6 @@ void sbcimm()
 
 void sbcabsy()
 {
-    cpu.y = 1;
     uint8_t high = get_arg(2) ,low= get_arg(1) ;
 
     uint8_t value_mem = mem.ram[high][low];
