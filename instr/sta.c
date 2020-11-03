@@ -25,7 +25,9 @@ void stazpgx()
 {}
 
 void staabsy()
-{}
+{
+    mem.ram[get_arg(2)][get_arg(1)]+=cpu.y;
+}
 
 void staabsx()
 {}
