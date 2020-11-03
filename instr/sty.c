@@ -4,7 +4,6 @@
 
 #include "sty.h"
 #include "cpu.h"
-#include <inttypes.h>
 
 void styzpg()
 {
@@ -14,7 +13,8 @@ void styzpg()
 
 void styabs()
 {
-    mem.ram[get_arg(2)][get_arg(1)]=cpu.y;
+    //guardamos el el valor del registro y en la memoria ram
+    mem.ram[get_arg(1)][get_arg(2)]=cpu.y;
 }
 
 void styzpgx()
