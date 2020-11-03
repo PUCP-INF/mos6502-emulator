@@ -27,9 +27,11 @@ void sbcimm()
     if(value_a<0)unsetsr(0);
     else setsr(0);
     //modify N flag
-    if(value_a<0)setsr(7);
+    if(value_a>127)setsr(7);
     //modify z flag
     if(value_a==0)setsr(1);
+    //modify V flag
+    if(256-value_mem>cpu.y)setsr(5);
 }
 
 void sbcabsy()
@@ -44,9 +46,11 @@ void sbcabsy()
     if(value_a<0)unsetsr(0);
     else setsr(0);
     //modify N flag
-    if(value_a<0)setsr(7);
+    if(value_a>127)setsr(7);
     //modify z flag
     if(value_a==0)setsr(1);
+    //modify V flag
+    if(256-value_mem>cpu.y)setsr(5);
 }
 
 void sbcabs()
