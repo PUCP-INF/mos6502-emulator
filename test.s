@@ -1,12 +1,36 @@
 !to "test", cbm
 * = $0200
 
-start:
-    lda #$10
+; byte $02 -> imprime ram
+; byte $03 -> imprime stack
+; byte $04 -> imprime cpu
+; byte $07 -> imprime los 3
+
+lda #$05
+sta $01
+lda #$00
+sta $00
+!byte $03
+jsr subr
+!byte $03
+pha
+!byte $03
+jmp exit
+
+; branches
 loop:
-    stx $00,y
-    cmp $00,x
-    inx
-    iny
+    pha
+    !byte $03
+    lda $01
+    cmp $00
+    inc $00
+    lda $00
     bne loop
-    dec $00
+    !byte $02
+
+subr:
+    !byte $03
+    rts
+
+; jumps
+exit:
