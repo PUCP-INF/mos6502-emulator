@@ -17,7 +17,7 @@ void deczpgx()
     cpu.x +=1;
     mem.ram[0][offset] -= 1;
     //modify N flag
-    if(mem.ram[0][offset]<0)setsr(7);
+    if(mem.ram[0][offset]>127)setsr(7);
     //modify z flag
     if(mem.ram[0][offset]==0)setsr(1);
 }

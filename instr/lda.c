@@ -23,7 +23,10 @@ void ldazpgx()
     uint8_t offset = get_arg(1);
     cpu.a = mem.ram[0][offset] + cpu.x;
 
-    //include zeronegflags
+    //modify N flag
+    if(cpu.a>127)setsr(7);
+    //modify z flag
+    if(cpu.a==0)setsr(1);
 }
 
 void ldaimm()
