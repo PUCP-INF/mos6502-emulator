@@ -17,7 +17,10 @@ void ldxzpg()
 }
 
 void ldxzpgy()
-{}
+{
+    uint8_t offset = get_arg(1);
+    cpu.x = mem.ram[0][offset] + cpu.y;
+}
 
 void ldxabs()
 {

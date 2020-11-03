@@ -18,4 +18,7 @@ void stxzpgy()
 }
 
 void stxabs()
-{}
+{
+    // little endian
+    mem.ram[get_arg(2)][get_arg(1)] = cpu.x;
+}
