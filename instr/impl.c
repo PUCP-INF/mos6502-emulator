@@ -75,7 +75,9 @@ void sed()
 {}
 
 void txa()
-{}
+{
+    cpu.a=cpu.x;
+}
 
 void txs()
 {
@@ -83,7 +85,9 @@ void txs()
 }
 
 void tax()
-{}
+{
+    cpu.x=cpu.a;
+}
 
 void tsx()
 {
@@ -91,7 +95,9 @@ void tsx()
 }
 
 void dex()
-{}
+{
+    cpu.x--;
+}
 
 void nop()
 {}
