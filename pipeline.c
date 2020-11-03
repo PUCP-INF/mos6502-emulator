@@ -1,5 +1,7 @@
 #include "pipeline.h"
 #include "cpu.h"
+#include "debug.h"
+
 #include "impl.h"
 #include "ora.h"
 #include "asl.h"
@@ -34,15 +36,24 @@ int fetch()
 
 void execute(int op_ind)
 {
+    cpu.pcu = 0;
     uint8_t num = opcode_bytes[op_ind];
     void (*func) (void) = opcode_func[op_ind];
     func();
-    cpu.pcl += num;
+    updatepc(num);
+}
+
+void updatepc(uint8_t numbytes)
+{
+    if (!cpu.pcu) {
+        if ((int)cpu.pcl + numbytes > 0xff) cpu.pch += 1;
+        cpu.pcl += numbytes;
+    }
 }
 
 // look up table
 void (*opcode_func[256])(void) = {
-    brk, oraxind, NULL, NULL, NULL, orazpg, aslzpg, NULL, php, oraimmd, asla, NULL, NULL, oraabs, aslabs, NULL,
+    brk, oraxind, print_ram, print_stack, print_cpu, orazpg, aslzpg, info_cpu, php, oraimmd, asla, NULL, NULL, oraabs, aslabs, NULL,
     bpl, oraindy, NULL, NULL, NULL, orazpgx, aslzpgx, NULL, clc, oraabsy, NULL, NULL, NULL, oraabsx, aslabsx, NULL,
     jsrabs, andxind, NULL, NULL, bitzpg, andzpg, rolzpg, NULL, plp, andimm, rola, NULL, bitabs, andabs, rolabs, NULL,
     bmi, andindy, NULL, NULL, NULL, andzpgx, rolzpgx, NULL, sec, andabsy, NULL, NULL, NULL, andabsx, rolabsx, NULL,
@@ -61,7 +72,7 @@ void (*opcode_func[256])(void) = {
 };
 
 uint8_t opcode_bytes[256] = {
-        1, 2, 0, 0, 2, 2, 2, 0,
+        1, 2, 1, 1, 1, 2, 2, 1,
         1, 2, 1, 0, 3, 3, 3, 0,
         2, 2, 0, 0, 2, 2, 2, 0,
         1, 3, 1, 0, 3, 3, 3, 0,

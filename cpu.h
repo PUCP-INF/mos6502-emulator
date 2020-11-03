@@ -13,6 +13,8 @@ struct CPU6502 {
 
     uint8_t sp;
     uint8_t sr;
+
+    uint8_t pcu;
 };
 
 struct MEM6502 {
@@ -29,8 +31,5 @@ uint8_t get_arg(int n);
 
 void push(uint8_t value);
 uint8_t pop();
-
-void print_cpu();
-void print_ram();
 
 #endif

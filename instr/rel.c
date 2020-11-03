@@ -74,12 +74,10 @@ void bcs() /*Branch on Carry Set*/
 
 void bne() /*Branch on Result not Zero*/
 {
-    int8_t offset = get_arg(1);
+    int8_t offset = get_arg(1) + 2;
     if (!getsr(1)) {
         cpu.pcl += offset;
-        if (offset < 0) {
-            cpu.pcl -= 2;
-        }
+        cpu.pcu = 1;
     }
 }
 
@@ -92,7 +90,5 @@ void beq() /*Branch on Result Zero*/
             cpu.pcl -= 2;
         }
     }
-
-
 }
 
