@@ -36,10 +36,18 @@ void sbcimm()
 
 void sbcabsy()
 {
-    uint8_t high = get_arg(2) ,low= get_arg(1) ;
+    uint8_t high = get_arg(2) ,low= get_arg(1)+ cpu.y ;
 
-    uint8_t value_mem = mem.ram[high][low];
-    cpu.a -= value_mem + cpu.y;
+    uint8_t value_mem;
+
+    if(low+cpu.y>255){
+        high++;
+        cpu.a -=mem.ram[high][low+cpu.y-255];
+        value_mem = mem.ram[high][low+cpu.y-255];
+    }else {
+        cpu.a -= mem.ram[high][low + cpu.y];
+        value_mem = mem.ram[high][low+ cpu.y];
+    }
     uint8_t value_a = cpu.a;
 
     //modify C flag
