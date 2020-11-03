@@ -27,4 +27,12 @@ void jmpabs()
 }
 
 void jmpind()
-{}
+{
+    uint8_t low, high, memory;
+    low = get_arg(1);//obtenemos la direccion
+    high = get_arg(2);
+    //vamos a esa direccion
+    //Esta instruccion no modifica ninguna bandera
+    cpu.pch = high;
+    cpu.pcl = low;
+}

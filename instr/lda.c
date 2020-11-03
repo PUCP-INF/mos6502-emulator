@@ -30,8 +30,8 @@ void ldazpgx()
 }
 
 void ldaimm()
-{
-    cpu.a = get_arg(1);
+{   //en esta funcion le asigno al registro a el valor de getarg
+    cpu.a = get_arg(1);//
 }
 
 void ldaabsy()
