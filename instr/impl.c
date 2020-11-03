@@ -56,7 +56,9 @@ void iny()
 }
 
 void cld()
-{}
+{
+    unsetsr(3);
+}
 
 void inx()
 {
@@ -64,7 +66,9 @@ void inx()
 }
 
 void sed()
-{}
+{
+    setsr(3);
+}
 
 void txa()
 {}
@@ -82,4 +86,6 @@ void dex()
 {}
 
 void nop()
-{}
+{
+    //DO NOTHING
+}

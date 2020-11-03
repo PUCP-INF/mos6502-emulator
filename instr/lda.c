@@ -19,7 +19,12 @@ void ldazpg()
 }
 
 void ldazpgx()
-{}
+{
+    uint8_t offset = get_arg(1);
+    cpu.a = mem.ram[0][offset] + cpu.x;
+
+    //include zeronegflags
+}
 
 void ldaimm()
 {
