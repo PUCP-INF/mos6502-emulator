@@ -50,8 +50,6 @@ void asla()
     }else{
         unsetsr(0);
     }
-{
-
 }
 
 void aslabs()
