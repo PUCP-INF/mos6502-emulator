@@ -12,7 +12,9 @@ void inczpg()
 }
 
 void inczpgx()
-{}
+{
+    mem.ram[0][get_arg(1) + cpu.x] += 1;
+}
 
 
 void incabs()

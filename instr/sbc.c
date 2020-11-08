@@ -15,7 +15,32 @@ void sbczpg()
 {}
 
 void sbczpgx()
-{}
+{
+    uint8_t value_mem = mem.ram[0][get_arg(1) + cpu.x];
+    int16_t value_a = cpu.a + getsr(0) * 256 - value_mem;
+    cpu.a += getsr(0) * 256 - value_mem;
+    //modify C flag
+    if(value_a<0)unsetsr(0);
+    else setsr(0);
+    //modify N flag
+    if(value_a>127) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
+    //modify z flag
+    if(value_a==0) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
+    //modify V flag
+    if(value_a > 127 || value_a < -127) {
+        setsr(5);
+    } else {
+        unsetsr(5);
+    }
+}
 
 void sbcimm()
 {
@@ -87,5 +112,4 @@ void sbcabsx()
     if(value_a==0)setsr(1);
     //modifi V flag
     if(256-value_mem>cpu.y)setsr(6);
-
 }
