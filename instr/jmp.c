@@ -7,15 +7,23 @@
 #include <stdio.h>
 
 void jsrabs()
-{}
+{
+    uint8_t low, high;
+    low = cpu.pcl;
+    high = cpu.pch;
+    if ((int)low + 3 > 0xff) high += 1;
+    push(low + 3);
+    push(high);
+    cpu.pch = get_arg(2);
+    cpu.pcl = get_arg(1);
+    cpu.pcu = 1;
+}
 
 void jmpabs()
 {
-    uint8_t low, high;
-    low = mem.ram[cpu.pch][cpu.pcl+1];
-    high = mem.ram[cpu.pch][cpu.pcl+2];
-    cpu.pch = high;
-    cpu.pcl = low-3;
+    cpu.pch = get_arg(2);
+    cpu.pcl = get_arg(1);
+    cpu.pcu = 1;
 }
 
 void jmpind()
