@@ -4,13 +4,62 @@
 
 #include "adc.h"
 #include "cpu.h"
+
 void adcxind()
 {
-    //comentario añadido de prueba para pull
+    uint8_t dm=get_arg(1)+cpu.x;
+    uint8_t high=mem.ram[0][dm+1];
+    uint8_t low=mem.ram[0][dm];
+    cpu.a=cpu.a+mem.ram[high][low];
+    if(getsr(0)){
+        cpu.a=cpu.a+1;
+    }
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+    if(cpu.a<0)unsetsr(0);  // flag C
+    else setsr(0);
+
+    if(256-mem.ram[high][low]>cpu.a)setsr(6);       //OJITO
 }
 
 void adczpg()
-{}
+{
+    uint8_t memory = mem.ram[0][get_arg(1)];
+    //Se agrega al acumulador el valor de la memoria y tambien el valor del registro Y
+    cpu.a=cpu.a+memory ;
+
+    if(getsr(0)){
+        cpu.a=cpu.a+1;//en caso tenga el carry
+    }
+    //Bandera 0 (Z).
+    if(!cpu.a)
+        setsr(1);
+    else
+        unsetsr(1);
+
+    //Bandera negativo (N).
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+    //Bandera de carry(C)
+
+    if (getsr(0)){
+        setsr(0);
+    }else{
+        unsetsr(0);
+    }
+    //Bandera de overflow(V)
+    if(cpu.a > 256)setsr(6);//bandera del overflow
+}
 
 void adcimm()
 {/*Para esta instruccion se tendra que sumar 1 al acumulador en caso el flag de
@@ -47,13 +96,82 @@ void adcimm()
 }
 
 void adcabs()
-{}
+{
+    uint8_t low, high;
+    low=get_arg(1);
+    high=get_arg(2);
+    cpu.a=cpu.a+mem.ram[high][low];
+    if(getsr(0)){
+        cpu.a=cpu.a+1;
+    }
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+    if(256-mem.ram[high][low]>cpu.a)setsr(6);       //OJITO
+
+}
 
 void adcindy()
-{}
+{
+    uint8_t dm = get_arg(1);
+
+    uint8_t high=mem.ram[0][dm+1];
+    uint8_t low=mem.ram[0][dm];
+    uint16_t offset =(high<<8)+low+cpu.y;
+    cpu.a=cpu.a+mem.ram[offset>>8][offset & 0XFF];
+    if(getsr(0)){
+        cpu.a=cpu.a+1;
+    }
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+    if(256-mem.ram[high][low]>cpu.a)setsr(6);       //OJITO
+}
 
 void adczpgx()
-{}
+{
+    uint8_t memory = mem.ram[0][get_arg(1)];
+    //Se agrega al acumulador el valor de la memoria y tambien el valor del registro Y
+    cpu.a=cpu.a+memory + cpu.x;
+
+    if(getsr(0)){
+        cpu.a=cpu.a+1;//en caso tenga el carry
+    }
+    //Bandera 0 (Z).
+    if(!cpu.a)
+        setsr(1);
+    else
+        unsetsr(1);
+
+    //Bandera negativo (N).
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+    //Bandera de carry(C)
+
+    if (getsr(0)){
+        setsr(0);
+    }else{
+        unsetsr(0);
+    }
+    //Bandera de overflow(V)
+    if(cpu.a > 256)setsr(6);//bandera del overflow
+}
 
 void adcabsy()
 {
@@ -86,4 +204,26 @@ void adcabsy()
 }
 
 void adcabsx()
-{}
+{
+    uint16_t offset;
+    uint8_t low = get_arg(1);
+    uint8_t high = get_arg(2);
+    offset = (high*256)+low+cpu.x;
+    high = offset/256;
+    low = offset%256;
+    cpu.a=cpu.a+mem.ram[high][low];
+    if(getsr(0)){
+        cpu.a=cpu.a+1;
+    }
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+    if(256-mem.ram[high][low]>cpu.a)setsr(6);       //OJITO
+}
