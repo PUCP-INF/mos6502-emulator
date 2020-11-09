@@ -20,11 +20,23 @@ void setcmpflags(uint8_t value)
 }
 
 void cmpxind()
-{}
+{
+    uint8_t dm=get_arg(1)+cpu.x;
+    uint8_t high=mem.ram[0][dm+1];
+    uint8_t low=mem.ram[0][dm];
+    uint8_t value=mem.ram[high][low];
+    setcmpflags(value);
+}
 
 void cmpindy()
-{}
-
+{
+    uint8_t dm = get_arg(1);
+    uint8_t high=mem.ram[0][dm+1];
+    uint8_t low=mem.ram[0][dm];
+    uint16_t offset =(high<<8)+low+cpu.y;
+    uint8_t value=mem.ram[offset>>8][offset & 0XFF];
+    setcmpflags(value);
+}
 void cmpzpg()
 {
     uint8_t offset = get_arg(1), value = mem.ram[0][offset];
