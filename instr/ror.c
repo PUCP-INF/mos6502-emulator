@@ -83,7 +83,7 @@ void rora()
         unsetsr(7);
     }
     //Bandera para carry (C)
-    if (regA& 0b00000001){
+    if (auxiliar& 0b00000001){
         setsr(0);
     }else{
         unsetsr(0);
@@ -97,7 +97,6 @@ void rorabs()
     uint8_t high = get_arg(2);
     memory = mem.ram[high][low];
     mem.ram[high][low] = (memory >> 1)|(uint8_t)getsr(0)<<7;//8bits-1bit
-
 
     if(!cpu.a)//Analizamos el 0 flag
         setsr(1);
@@ -114,7 +113,6 @@ void rorabs()
     }else{
         unsetsr(0);
     }
-
 }
 
 void rorabsx()
@@ -137,11 +135,10 @@ void rorabsx()
         setsr(7);
     else
         unsetsr(7);
+
     if (memory & 0b00000001){ //carry flag
         setsr(0);
     }else{
         unsetsr(0);
     }
-
-
 }
