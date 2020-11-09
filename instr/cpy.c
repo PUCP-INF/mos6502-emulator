@@ -19,7 +19,19 @@ void cpyimm()
 }
 
 void cpyzpg()
-{}
+{
+    uint8_t offset = get_arg(1);
+    uint8_t memory;
+    memory = mem.ram[0][offset];
+    if(memory >= cpu.y)//Seteamos el carry flag
+        setsr(0);
+
+    if(memory == cpu.y)//Seteamos el zero flag
+        setsr(1);
+
+    if((memory >> 7) & 0x01)
+        setsr(7);
+}
 
 void cpyabs()
 {}
