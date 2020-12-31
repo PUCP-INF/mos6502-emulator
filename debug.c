@@ -10,6 +10,7 @@ void print_ram()
         if ((j+1) % 16 == 0) printf("\n");
     }
     printf("\n");
+    return;
 }
 
 void print_stack()

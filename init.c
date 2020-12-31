@@ -32,7 +32,7 @@ void init_display()
 {
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0);
+    timer = al_create_timer(1.0/60.0);
     must_init(timer, "timer");
     queue = al_create_event_queue();
     must_init(queue, "queue");
@@ -50,6 +50,7 @@ void init_display()
 
 void init_cpu()
 {
+    srand(time(NULL));
     /*Simplementa aqui inicializamos la RAM, son 256 paginas con
      * 256 bytes cada una. Todas se ponen en 0*/
     mem.ram = GC_malloc(256 * sizeof(uint8_t));
@@ -70,8 +71,10 @@ void run_program()
     bool done = false;
     bool redraw = true;
     ALLEGRO_EVENT event;
+    ALLEGRO_KEYBOARD_STATE ks;
 
     al_start_timer(timer);
+    float x1 = 0, y1 = 0, x2 = 20, y2 = 20;
     while (1) {
         al_wait_for_event(queue, &event);
 
@@ -79,9 +82,21 @@ void run_program()
 
         switch (event.type) {
             case ALLEGRO_EVENT_TIMER:
+                mem.ram[0][0xfe] = rand() % 256;
                 op_ind = fetch();
                 execute(op_ind);
+                fflush(stdout);
                 redraw = true;
+                break;
+            case ALLEGRO_EVENT_KEY_DOWN:
+                if (event.keyboard.keycode == ALLEGRO_KEY_W)
+                    mem.ram[0][0xff] = 0x77;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_A)
+                    mem.ram[0][0xff] = 0x61;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_S)
+                    mem.ram[0][0xff] = 0x73;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_D)
+                    mem.ram[0][0xff] = 0x64;
                 break;
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
                 done = true;
@@ -90,13 +105,45 @@ void run_program()
 
         if (done) break;
 
+
+        // $02 - $05
         if(redraw && al_is_event_queue_empty(queue)) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
-            char snum[100];
-            sprintf(snum, "%d", mem.ram[0][0]);
-            al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, snum);
+            ALLEGRO_COLOR white = al_map_rgb_f(1, 1, 1);
+            ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
+            mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
+//            printf("%02hhX\n", mem.ram[0][0x11]);
+            fflush(stdout);
+            char str[3];
+            for (int i = 2; i <= 5; ++i) {
+                for (int j = 0; j < 256; ++j) {
+//                    sprintf(str, "%02hhX", mem.ram[i][j]);
+//                    al_draw_text(font, white, x1, y1, 0, str);
+//                    al_draw_filled_rectangle(x1, y1, x2, y2, white);
+                    sprintf(str, "%02hhX", mem.ram[i][j]);
+                    if (mem.ram[i][j]) {
+                        al_draw_text(font, white, x1, y1, 0, str);
+//                        al_draw_filled_rectangle(x1, y1, x2, y2, white);
+                    } else {
+//                        al_draw_filled_rectangle(x1, y1, x2, y2, black);
+                    }
+                    if (x2 == 640) {
+                        y1 += 20;
+                        y2 += 20;
+                        x1 = 0;
+                        x2 = 20;
+                    } else {
+                        x1 += 20;
+                        x2 += 20;
+                    }
+
+                }
+            }
+            x1 = 0; y1 = 0; x2 = 20; y2 = 20;
             al_flip_display();
             redraw = false;
+            print_ram();
+            fflush(stdout);
         }
     }
     al_destroy_display(disp);

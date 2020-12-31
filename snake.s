@@ -1,5 +1,5 @@
 !to "snake", cbm
-* = $0600
+* = $aa00
 ;  ___           _        __ ___  __ ___
 ; / __|_ _  __ _| |_____ / /| __|/  \_  )
 ; \__ \ ' \/ _` | / / -_) _ \__ \ () / /
@@ -137,8 +137,8 @@ illegalMove:
 
 
 checkCollision:
-  jsr checkAppleCollision
-  jsr checkSnakeCollision
+  ;jsr checkAppleCollision
+  ;jsr checkSnakeCollision
   rts
 
 
