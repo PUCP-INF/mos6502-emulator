@@ -1,4 +1,5 @@
 !to "test", cbm
+; vi:ft=acme
 * = $0200
 
 ; byte $02 -> imprime ram
@@ -19,6 +20,7 @@ jmp exit
 
 ; branches
 loop:
+    !byte $02
     pha
     !byte $03
     lda $01
