@@ -2,10 +2,21 @@ cmake_minimum_required(VERSION 3.17)
 
 project(mos6502 C)
 
+
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(GC REQUIRED IMPORTED_TARGET bdw-gc)
+pkg_check_modules(ALG REQUIRED allegro-5)
+pkg_check_modules(ALGFONT REQUIRED allegro_font-5)
+pkg_check_modules(ALGIMG REQUIRED allegro_image-5)
+pkg_check_modules(ALGPRIM REQUIRED allegro_primitives-5)
+pkg_check_modules(ALGTTF REQUIRED allegro_ttf-5)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/instr)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-find_library(gc gc)
+#include_directories(${GC_INCLUDE_DIRS})
+#include_directories(${ALG_INCLUDE_DIRS})
+#include_directories(${ALGF_INCLUDE_DIRS})
 
 add_executable(cpu
         main.c
@@ -66,4 +77,11 @@ add_executable(cpu
         instr/inc.c
         instr/inc.h)
 
-target_link_libraries(cpu gc)
+target_link_libraries(cpu PUBLIC
+        ${ALG_LIBRARIES}
+        ${ALGF_LIBRARIES}
+        ${ALGIMG_LIBRARIES}
+        ${ALGPRIM_LIBRARIES}
+        ${ALGTTF_LIBRARIES}
+        ${GC_LIBRARIES}
+)
