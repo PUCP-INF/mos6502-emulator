@@ -32,13 +32,12 @@ void init_display()
 {
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/60.0);
+    timer = al_create_timer(1.0/10.0);
     must_init(timer, "timer");
     queue = al_create_event_queue();
     must_init(queue, "queue");
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-//    al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
     disp = al_create_display(640, 640);
     font = al_create_builtin_font();
     must_init(disp, "display");
@@ -78,7 +77,7 @@ void run_program()
     while (1) {
         al_wait_for_event(queue, &event);
 
-        if (mem.ram[cpu.pch][cpu.pcl] == 0x00) done = true;
+        if (mem.ram[cpu.pch][cpu.pcl] == 0x00) break;
 
         switch (event.type) {
             case ALLEGRO_EVENT_TIMER:
@@ -105,12 +104,21 @@ void run_program()
 
         if (done) break;
 
-
         // $02 - $05
         if(redraw && al_is_event_queue_empty(queue)) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
             ALLEGRO_COLOR white = al_map_rgb_f(1, 1, 1);
             ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
+
+            // blanquear posiciones anteriores
+            for (int i = 2; i <= 5; ++i) {
+                for (int j = 0; j < 256; ++j) {
+                    if (mem.ram[i][j] != 0x22) {
+                        mem.ram[i][j] = 0;
+                    }
+                }
+            }
+
             // cabeza
             if (mem.ram[0][0x11] != 0 && mem.ram[0][0x10] != 0) {
                 mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
