@@ -40,7 +40,7 @@ void staindy()
 void stazpgx()
 {
     uint8_t offset = get_arg(1);
-    mem.ram[0][offset] = cpu.a +  cpu.x;
+    mem.ram[0][offset+cpu.x] = cpu.a;
 }
 
 void staabsy()

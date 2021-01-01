@@ -36,4 +36,6 @@ void info_cpu()
     print_cpu();
     print_stack();
     print_ram();
+    fflush(stdout);
+    for (int i = 0; i < 2; ++i) i += 1;
 }

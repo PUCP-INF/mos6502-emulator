@@ -51,7 +51,7 @@ void ldazpg()
 void ldazpgx()
 {
     uint8_t offset = get_arg(1);
-    cpu.a = mem.ram[0][offset] + cpu.x;
+    cpu.a = mem.ram[0][offset+cpu.x];
 
     //modify N flag
     if(cpu.a>127)setsr(7);

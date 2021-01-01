@@ -75,17 +75,16 @@ generateApplePosition:
   clc
   adc #2
   sta appleH
-
   rts
 
 
 loop:
-  jsr readKeys
-  jsr checkCollision
+  ;jsr readKeys
+  ;jsr checkCollision
   jsr updateSnake
   jsr drawApple
   jsr drawSnake
-  jsr spinWheels
+  ;jsr spinWheels
   jmp loop
 
 
@@ -182,7 +181,6 @@ didCollide:
 didntCollide:
   rts
 
-
 updateSnake:
   ldx snakeLength
   dex
@@ -242,7 +240,7 @@ left:
   beq collision
   rts
 collision:
-  jmp gameOver
+  ;jmp gameOver
 
 
 drawApple:
