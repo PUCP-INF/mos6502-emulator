@@ -67,14 +67,21 @@ initSnake:
 generateApplePosition:
   ;load a new random byte into $00
   lda sysRandom
+  !byte $07
   sta appleL
+  !byte $07
 
   ;load a new random number from 2 to 5 into $01
   lda sysRandom
+  !byte $07
   and #$03 ;mask out lowest 2 bits
+  !byte $07
   clc
+  !byte $07
   adc #2
+  !byte $07
   sta appleH
+  !byte $07
 
   rts
 
@@ -182,16 +189,19 @@ didCollide:
 didntCollide:
   rts
 
-
 updateSnake:
   ldx snakeLength
   dex
   txa
 updateloop:
   lda snakeHeadL,x
+  !byte $07
   sta snakeBodyStart,x
+  !byte $07
   dex
+  !byte $07
   bpl updateloop
+  !byte $07
 
   lda snakeDirection
   lsr
@@ -242,7 +252,7 @@ left:
   beq collision
   rts
 collision:
-  jmp gameOver
+  ;jmp gameOver
 
 
 drawApple:

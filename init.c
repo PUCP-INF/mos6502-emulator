@@ -38,7 +38,7 @@ void init_display()
     must_init(queue, "queue");
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-    al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
+//    al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
     disp = al_create_display(640, 640);
     font = al_create_builtin_font();
     must_init(disp, "display");
@@ -111,21 +111,26 @@ void run_program()
             al_clear_to_color(al_map_rgb(0, 0, 0));
             ALLEGRO_COLOR white = al_map_rgb_f(1, 1, 1);
             ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
-            mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
-//            printf("%02hhX\n", mem.ram[0][0x11]);
-            fflush(stdout);
+            // cabeza
+            if (mem.ram[0][0x11] != 0 && mem.ram[0][0x10] != 0) {
+                mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
+            }
+            // manzana
+            if (mem.ram[0][0x1] != 0 && mem.ram[0][0x0] != 0) {
+                mem.ram[mem.ram[0][0x1]][mem.ram[0][0x0]] = 0x22;
+            }
             char str[3];
             for (int i = 2; i <= 5; ++i) {
                 for (int j = 0; j < 256; ++j) {
-//                    sprintf(str, "%02hhX", mem.ram[i][j]);
-//                    al_draw_text(font, white, x1, y1, 0, str);
-//                    al_draw_filled_rectangle(x1, y1, x2, y2, white);
                     sprintf(str, "%02hhX", mem.ram[i][j]);
+                    al_draw_text(font, white, x1, y1, 0, str);
+//                    al_draw_filled_rectangle(x1, y1, x2, y2, white);
+//                    sprintf(str, "%02hhX", mem.ram[i][j]);
                     if (mem.ram[i][j]) {
-                        al_draw_text(font, white, x1, y1, 0, str);
+//                        al_draw_text(font, white, x1, y1, 0, str);
 //                        al_draw_filled_rectangle(x1, y1, x2, y2, white);
                     } else {
-//                        al_draw_filled_rectangle(x1, y1, x2, y2, black);
+                        al_draw_filled_rectangle(x1, y1, x2, y2, black);
                     }
                     if (x2 == 640) {
                         y1 += 20;
@@ -142,8 +147,6 @@ void run_program()
             x1 = 0; y1 = 0; x2 = 20; y2 = 20;
             al_flip_display();
             redraw = false;
-            print_ram();
-            fflush(stdout);
         }
     }
     al_destroy_display(disp);
