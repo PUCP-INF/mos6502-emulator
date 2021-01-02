@@ -1,7 +1,11 @@
 #include "debug.h"
 #include "cpu.h"
-#include <stdio.h>
-#include <ncurses.h>
+
+#ifdef __MINGW64__
+#   include <ncurses/ncurses.h>
+#else
+#   include <ncurses.h>
+#endif
 
 void print_ram()
 {

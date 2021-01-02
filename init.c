@@ -8,7 +8,12 @@
 #include <gc/gc.h>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_primitives.h>
-#include <ncurses.h>
+
+#ifdef __MINGW64__
+#   include <ncurses/ncurses.h>
+#else
+#   include <ncurses.h>
+#endif
 
 //Ver estrutura del cpu y de la mem
 struct CPU6502 cpu;
