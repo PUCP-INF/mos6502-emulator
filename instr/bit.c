@@ -13,8 +13,10 @@ void bitzpg()
     uint8_t offset = get_arg(1);
     memory = mem.ram[0][offset];
 
-    bitSvn= (memory >> 7) & 0x01;
-    bitSix= (memory >> 6) & 0x01;
+//    bitSvn = (memory >> 7) & 0x01;
+//    bitSix = (memory >> 6) & 0x01;
+    bitSix = memory & 0b01000000;
+    bitSvn = memory & 0b10000000;
 
     //Asignamos los bits
     if(bitSvn)
@@ -28,8 +30,10 @@ void bitzpg()
         unsetsr(6);
 
     //Activamos el zero flag
-    if(cpu.a&memory==0)
+    if((cpu.a & memory) == 0)
         setsr(1);
+    else
+        unsetsr(1);
 }
 
 void bitabs() //Oper means a memory direction

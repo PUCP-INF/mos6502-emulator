@@ -31,7 +31,7 @@ void lsra()
 {
     if (cpu.a & 0b00000001){
         setsr(0);
-    }else{
+    } else {
         unsetsr(0);
     }
     cpu.a >>=1;//lo dividimos entre 2

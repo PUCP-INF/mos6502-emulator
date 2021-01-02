@@ -4,7 +4,7 @@
 
 #include "rel.h"
 #include "cpu.h"
-#include <stdio.h>
+
 void bpl()/* Branch on Result Plus*/
 {
     int8_t offset = get_arg(1);
@@ -83,10 +83,11 @@ void bne() /*Branch on Result not Zero*/
 
 void beq() /*Branch on Result Zero*/
 {
-
     int8_t offset = get_arg(1);
+//    uint16_t res;
     if (getsr(1)) {
-
+//        res = cpu.pcl + offset;
+//        if (res > 0xff) cpu.pch++;
         cpu.pcl += offset;
         if (offset < 0) {
             cpu.pcl -= 2;

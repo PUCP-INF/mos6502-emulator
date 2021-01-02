@@ -4,17 +4,17 @@
 
 #include "cmp.h"
 #include "cpu.h"
-#include <stdio.h>
+
 void setcmpflags(uint8_t value)
 {
     if (cpu.a == value) {
         setsr(1);
-    }else{
+    } else {
         unsetsr(1);
     }
     if (cpu.a >= value) {
         setsr(0);
-    }else{
+    } else {
         unsetsr(0);
     }
 }
@@ -51,7 +51,6 @@ void cmpzpgx()
 
 void cmpimm()
 {
-    //uint8_t low = get_arg(1), high = get_arg(2), value = mem.ram[high][low];
     setcmpflags(get_arg(1));
 }
 

@@ -1,5 +1,5 @@
 !to "snake", cbm
-* = $aa00
+* = $0600
 ;  ___           _        __ ___  __ ___
 ; / __|_ _  __ _| |_____ / /| __|/  \_  )
 ; \__ \ ' \/ _` | / / -_) _ \__ \ () / /
@@ -36,32 +36,29 @@ sysLastKey = $ff
   jsr loop
 
 init:
-  jsr initSnake ;funciona bien
-  jsr generateApplePosition ;funciona bien
+  jsr initSnake
+  jsr generateApplePosition
   rts
 
 
 initSnake:
-;carga en snakeDirection el valor de movingRight ( 0x0200= 2)
   lda #movingRight  ;start direction
   sta snakeDirection
-;carga en snakeLength el valor de 4 ( 0x0300= 4)
+
   lda #4  ;start length (2 segments)
   sta snakeLength
-;carga en snakeHeadL el valor de 11 ( 0x1000= 11)
+
   lda #$11
   sta snakeHeadL
-;carga en snakeBodyStart el valor de 10 ( 0x1200= 10)
+
   lda #$10
   sta snakeBodyStart
 
   lda #$0f
   sta $14 ; body segment 1
 
-;carga en snakeHeadH el valor de 04 ( 0x1000= 4)
   lda #$04
   sta snakeHeadH
-
   sta $13 ; body segment 1
   sta $15 ; body segment 2
   rts
@@ -83,58 +80,53 @@ generateApplePosition:
 
 loop:
   jsr readKeys
-  ;lda snakeHeadL
-  ;sbc #$01
-  ;sta snakeHeadL
-  ;dec snakeHeadH
-
-  ;jsr checkCollision
+  jsr checkCollision
   jsr updateSnake
-  ;jsr drawApple
-  ;jsr drawSnake
-  ;jsr spinWheels
+;  jsr drawApple
+;  jsr drawSnake
+;  jsr spinWheels
   jmp loop
 
 
 readKeys:
   lda sysLastKey
-  cmp #ASCII_a
-  beq leftKey
-  cmp #ASCII_w ;terrible error de concepto
-  beq upKey ;terrible error de concepto
+  cmp #ASCII_w
+  beq upKey
   cmp #ASCII_d
   beq rightKey
   cmp #ASCII_s
   beq downKey
+  cmp #ASCII_a
+  beq leftKey
   rts
 upKey:
-  ;lda #movingDown
-  ;bit snakeDirection
-  ;bne illegalMove
+  lda #movingDown
+  bit snakeDirection
+  bne illegalMove
 
   lda #movingUp
   sta snakeDirection
   rts
 rightKey:
-  ;lda #movingLeft
-  ;bit snakeDirection
-  ;bne illegalMove
+  lda #movingLeft
+  bit snakeDirection
+  bne illegalMove
 
   lda #movingRight
   sta snakeDirection
   rts
 downKey:
-  ;lda #movingUp
-  ;bit snakeDirection
-  ;bne illegalMove
+  lda #movingUp
+  bit snakeDirection
+  bne illegalMove
 
   lda #movingDown
   sta snakeDirection
   rts
 leftKey:
-  ;lda #movingRight
-  ;bit snakeDirection
-  ;bne illegalMove
+  lda #movingRight
+  bit snakeDirection
+  bne illegalMove
 
   lda #movingLeft
   sta snakeDirection
@@ -144,8 +136,8 @@ illegalMove:
 
 
 checkCollision:
-  ;jsr checkAppleCollision
-  ;jsr checkSnakeCollision
+  jsr checkAppleCollision
+;  jsr checkSnakeCollision
   rts
 
 
@@ -190,14 +182,16 @@ didntCollide:
   rts
 
 updateSnake:
-  ;ldx snakeLength
-  ;dex
-  ;txa
+  ldx snakeLength
+  dex
+  txa
+  nop
+  nop
 updateloop:
-  ;lda snakeHeadL,x
-  ;sta snakeBodyStart,x
-  ;dex
-  ;bpl updateloop
+  lda snakeHeadL,x
+  sta snakeBodyStart,x
+  dex
+  bpl updateloop
 
   lda snakeDirection
   lsr
@@ -217,10 +211,9 @@ up:
   rts
 upup:
   dec snakeHeadH
-  lda #$6
-  nop
-  ;cmp snakeHeadH
-  ;beq collision
+  lda #$1
+  cmp snakeHeadH
+  beq collision
   rts
 right:
   inc snakeHeadL
@@ -249,7 +242,7 @@ left:
   beq collision
   rts
 collision:
-  ;jmp gameOver
+  jmp gameOver
 
 
 drawApple:

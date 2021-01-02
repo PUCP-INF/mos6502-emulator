@@ -4,8 +4,8 @@
 
 #include "sbc.h"
 #include "cpu.h"
-#include <stdio.h>
 #include <math.h>
+
 void sbcxind()
 {
     uint8_t dm=get_arg(1)+cpu.x;
@@ -89,30 +89,37 @@ void sbczpgx()
 
 void sbcimm()
 {
-    uint8_t numHex = get_arg(1);
-    uint8_t numDec=0,potencia=0,aux;
-    //Convertirmos a decimal
-    while(numHex>0){
-        aux=numHex%10; //Extraemos el ultimo digito
-        numDec+=aux*pow(16,potencia);
-        potencia++;
-        numHex=numHex/10;
+    uint8_t auxiliar = get_arg(1);//tomamos el valor inmmediato
+    uint16_t diff = (uint16_t)cpu.a - auxiliar;
+    cpu.a -= auxiliar; //le agregamos ese valor al acumulador
+    //verificamos el carry
+    if (getsr(0)) {
+        diff--;
+//        cpu.a--;
     }
-    cpu.a-=numDec;
-    aux=cpu.a;
-    //Vamos a modifiar las banderas
-    //modigy C carry
-    if(aux<0)setsr(0);
-    else unsetsr(0);
-    //modify N flag
-    if(aux<0)setsr(7);
-    else unsetsr(7);
-    //modify z flag
-    if(aux==0)setsr(1);
-    else unsetsr(1);
+    //luego tendremos que verificar las 4 banderas(N,Z,C,V)
+    //bandera de 0 (Z)
+    if(!cpu.a){
+        setsr(1);
+    }else{
+        unsetsr(1);
+    }
+    //Bandera para negativo (N)
+    if (cpu.a & 0b10000000){
+        setsr(7);
+    }else{
+        unsetsr(7);
+    }
+    //Bandera de carry(C)
+    if (diff < 0x100) {
+        setsr(0);
+    } else {
+        unsetsr(0);
+    }
 
+    //Bandera de overflow(V)
+    if(cpu.a == 255)setsr(6);//bandera del overflow
 }
-
 
 void sbczpg()
 {
@@ -143,7 +150,6 @@ void sbczpg()
 
 void sbcabsy()
 {
-
     uint16_t offset;
     uint8_t low = get_arg(1);
     uint8_t high = get_arg(2);
