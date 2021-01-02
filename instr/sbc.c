@@ -4,7 +4,8 @@
 
 #include "sbc.h"
 #include "cpu.h"
-
+#include <stdio.h>
+#include <math.h>
 void sbcxind()
 {
     uint8_t dm=get_arg(1)+cpu.x;
@@ -88,30 +89,30 @@ void sbczpgx()
 
 void sbcimm()
 {
-    uint8_t dm = get_arg(1);
-    uint8_t high=mem.ram[0][dm+1];
-    uint8_t low=mem.ram[0][dm];
-    uint16_t offset =(high<<8)+low+cpu.y;
-    cpu.a =cpu.a - mem.ram[offset>>8][offset & 0XFF];
-    uint8_t auxiliar = cpu.a;
-    uint8_t value_mem=mem.ram[offset>>8][offset & 0XFF];
+    uint8_t numHex = get_arg(1);
+    uint8_t numDec=0,potencia=0,aux;
+    //Convertirmos a decimal
+    while(numHex>0){
+        aux=numHex%10; //Extraemos el ultimo digito
+        numDec+=aux*pow(16,potencia);
+        potencia++;
+        numHex=numHex/10;
+    }
+    cpu.a-=numDec;
+    aux=cpu.a;
     //Vamos a modifiar las banderas
     //modigy C carry
-    if(auxiliar<0)unsetsr(0);
-    else setsr(0);
+    if(aux<0)setsr(0);
+    else unsetsr(0);
     //modify N flag
-    if(auxiliar<0)setsr(7);
+    if(aux<0)setsr(7);
     else unsetsr(7);
     //modify z flag
-    if(auxiliar==0)setsr(1);
+    if(aux==0)setsr(1);
     else unsetsr(1);
-    //modify V flag overflow
-    if(value_mem > 127 || value_mem < -127) {//se pasa de los rangos
-        setsr(6);
-    } else {
-        unsetsr(6);
-    }
+
 }
+
 
 void sbczpg()
 {
@@ -142,6 +143,7 @@ void sbczpg()
 
 void sbcabsy()
 {
+
     uint16_t offset;
     uint8_t low = get_arg(1);
     uint8_t high = get_arg(2);

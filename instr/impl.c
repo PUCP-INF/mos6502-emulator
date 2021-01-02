@@ -4,7 +4,7 @@
 
 #include "impl.h"
 #include "cpu.h"
-
+#include <stdio.h>
 void setzeronegflags(uint8_t value)
 {
     if (!value) setsr(1);
@@ -141,5 +141,6 @@ void dex()
 
 void nop()
 {
+    printf("aqui toy (nop)\n");
     //DO NOTHING
 }

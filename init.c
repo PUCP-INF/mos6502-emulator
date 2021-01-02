@@ -32,7 +32,7 @@ void init_display()
 {
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/10.0);
+    timer = al_create_timer(1.0/30.0);
     must_init(timer, "timer");
     queue = al_create_event_queue();
     must_init(queue, "queue");
@@ -74,6 +74,7 @@ void run_program()
 
     al_start_timer(timer);
     float x1 = 0, y1 = 0, x2 = 20, y2 = 20;
+    mem.ram[0][0xff] = 0x64;
     while (1) {
         al_wait_for_event(queue, &event);
 
@@ -118,7 +119,9 @@ void run_program()
                     }
                 }
             }
-
+            if(mem.ram[0][0x11] ==0x03 && mem.ram[0][0x10] == 0xf1){
+                printf("work sbc\n");
+            }
             // cabeza
             if (mem.ram[0][0x11] != 0 && mem.ram[0][0x10] != 0) {
                 mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
