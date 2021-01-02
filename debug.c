@@ -28,10 +28,10 @@ void print_stack()
 
 void print_cpu()
 {
-    printw("\nA = %02x\t\tC Z I D B V N\nX = %02x\t\t%d %d %d %d %d %d %d\nY = %02x\n",
+    printw("\nA = %02x\t\tC Z I D B V N\nX = %02x\t\t%d %d %d %d %d %d %d\nY = %02x\nPCL = %02x   PCH = %02x",
            cpu.a, cpu.x,
            getsr(0), getsr(1), getsr(2), getsr(3), getsr(4), getsr(6), getsr(7),
-           cpu.y);
+           cpu.y, cpu.pcl, cpu.pch);
     printw("\n");
 }
 

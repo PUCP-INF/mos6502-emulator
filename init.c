@@ -79,9 +79,10 @@ void run_program()
     while (1) {
         al_wait_for_event(queue, &event);
 
+        if (mem.ram[cpu.pch][cpu.pcl] == 0x00) break;
+
         switch (event.type) {
             case ALLEGRO_EVENT_TIMER:
-                if (mem.ram[cpu.pch][cpu.pcl] == 0x00) break;
                 mem.ram[0][0xfe] = rand() % 256;
                 op_ind = fetch();
                 execute(op_ind);
