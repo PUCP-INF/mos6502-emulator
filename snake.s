@@ -84,7 +84,7 @@ loop:
   jsr updateSnake
 ;  jsr drawApple
 ;  jsr drawSnake
-  jsr spinWheels
+;  jsr spinWheels
   jmp loop
 
 

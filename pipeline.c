@@ -39,6 +39,7 @@ void execute(int op_ind)
     cpu.pcu = 0;
     uint8_t num = opcode_bytes[op_ind];
     void (*func) (void) = opcode_func[op_ind];
+    if (!func) return;
     func();
     updatepc(num);
 }
