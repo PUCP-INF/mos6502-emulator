@@ -7,8 +7,16 @@
 
 void setzeronegflags(uint8_t value)
 {
-    if (!value) setsr(1);
-    if ((value >> 7) & 0x01) setsr(7);
+    if (!value) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
+    if (value & 0b10000000) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
 }
 
 void brk()
@@ -135,8 +143,22 @@ void tsx()
 
 void dex()
 {
+    int16_t res = cpu.x - 1;
+
+    if (res == 0) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
+
+    if (res < 0) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
+
     cpu.x--;
-    setzeronegflags(cpu.x);
+//    setzeronegflags(cpu.x);
 }
 
 void nop()

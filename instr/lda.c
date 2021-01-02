@@ -54,9 +54,18 @@ void ldazpgx()
     cpu.a = mem.ram[0][offset+cpu.x];
 
     //modify N flag
-    if(cpu.a>127)setsr(7);
+    if(cpu.a & 0b10000000) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
+
     //modify z flag
-    if(cpu.a==0)setsr(1);
+    if(cpu.a==0) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
 }
 
 void ldaimm()
