@@ -26,8 +26,10 @@
 #include "sbc.h"
 #include "cpx.h"
 #include "inc.h"
+#include "init.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 int fetch()
 {
@@ -39,7 +41,10 @@ void execute(int op_ind)
     cpu.pcu = 0;
     uint8_t num = opcode_bytes[op_ind];
     void (*func) (void) = opcode_func[op_ind];
-    if (!func) return;
+    if (!func) {
+        end_cpu();
+        exit(0);
+    }
     func();
     updatepc(num);
 }

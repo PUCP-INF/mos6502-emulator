@@ -23,6 +23,14 @@ ALLEGRO_TIMER* timer;
 ALLEGRO_EVENT_QUEUE* queue;
 ALLEGRO_DISPLAY* disp;
 
+void end_cpu()
+{
+    al_destroy_display(disp);
+    al_destroy_timer(timer);
+    al_destroy_event_queue(queue);
+    endwin();
+}
+
 void must_init(bool test, const char *description)
 {
     if(test) return;
@@ -161,10 +169,6 @@ void run_program()
             redraw = false;
         }
     }
-    al_destroy_display(disp);
-    al_destroy_timer(timer);
-    al_destroy_event_queue(queue);
-    endwin();
 }
 
 /*El load file carga el archivo binario del acme.
