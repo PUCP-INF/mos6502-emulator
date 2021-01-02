@@ -9,7 +9,18 @@
 void deczpg()
 {
     uint8_t offset = get_arg(1);
-    mem.ram[0][offset] -= 1;
+    uint16_t res = mem.ram[0][offset] - 1;
+    if (res == 0) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
+    if (res & 0b10000000) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
+    mem.ram[0][offset] = res;
 }
 
 void deczpgx()

@@ -4,7 +4,6 @@
 
 #include "sbc.h"
 #include "cpu.h"
-#include <math.h>
 
 void sbcxind()
 {
@@ -91,25 +90,26 @@ void sbcimm()
 {
     uint8_t auxiliar = get_arg(1);//tomamos el valor inmmediato
     uint16_t diff = (uint16_t)cpu.a - auxiliar;
-    cpu.a -= auxiliar; //le agregamos ese valor al acumulador
     //verificamos el carry
-    if (getsr(0)) {
+    if (!getsr(0)) {
         diff--;
-//        cpu.a--;
     }
+
     //luego tendremos que verificar las 4 banderas(N,Z,C,V)
     //bandera de 0 (Z)
-    if(!cpu.a){
+    if(!diff){
         setsr(1);
     }else{
         unsetsr(1);
     }
+
     //Bandera para negativo (N)
-    if (cpu.a & 0b10000000){
+    if (diff & 0b10000000){
         setsr(7);
     }else{
         unsetsr(7);
     }
+
     //Bandera de carry(C)
     if (diff < 0x100) {
         setsr(0);
@@ -117,8 +117,7 @@ void sbcimm()
         unsetsr(0);
     }
 
-    //Bandera de overflow(V)
-    if(cpu.a == 255)setsr(6);//bandera del overflow
+    cpu.a = diff;
 }
 
 void sbczpg()
