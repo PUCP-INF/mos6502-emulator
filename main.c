@@ -13,5 +13,6 @@ int main(int argc, char **argv)
     init_cpu();
     load_file(argv[1]);
     run_program();
+    end_cpu();
     return 0;
 }
