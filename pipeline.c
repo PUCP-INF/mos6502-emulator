@@ -46,7 +46,8 @@ void execute(int op_ind)
 void updatepc(uint8_t numbytes)
 {
     if (!cpu.pcu) {
-        if ((int)cpu.pcl + numbytes > 0xff) cpu.pch += 1;
+        uint16_t newpc = (uint16_t)cpu.pcl + numbytes;
+        if (newpc > 0xff) cpu.pch += 1;
         cpu.pcl += numbytes;
     }
 }

@@ -4,6 +4,7 @@
 
 #include "sbc.h"
 #include "cpu.h"
+#include <math.h>
 
 void sbcxind()
 {
@@ -88,29 +89,36 @@ void sbczpgx()
 
 void sbcimm()
 {
-    uint8_t dm = get_arg(1);
-    uint8_t high=mem.ram[0][dm+1];
-    uint8_t low=mem.ram[0][dm];
-    uint16_t offset =(high<<8)+low+cpu.y;
-    cpu.a =cpu.a - mem.ram[offset>>8][offset & 0XFF];
-    uint8_t auxiliar = cpu.a;
-    uint8_t value_mem=mem.ram[offset>>8][offset & 0XFF];
-    //Vamos a modifiar las banderas
-    //modigy C carry
-    if(auxiliar<0)unsetsr(0);
-    else setsr(0);
-    //modify N flag
-    if(auxiliar<0)setsr(7);
-    else unsetsr(7);
-    //modify z flag
-    if(auxiliar==0)setsr(1);
-    else unsetsr(1);
-    //modify V flag overflow
-    if(value_mem > 127 || value_mem < -127) {//se pasa de los rangos
-        setsr(6);
-    } else {
-        unsetsr(6);
+    uint8_t auxiliar = get_arg(1);//tomamos el valor inmmediato
+    uint16_t diff = (uint16_t)cpu.a - auxiliar;
+    cpu.a -= auxiliar; //le agregamos ese valor al acumulador
+    //verificamos el carry
+    if (getsr(0)) {
+        diff--;
+//        cpu.a--;
     }
+    //luego tendremos que verificar las 4 banderas(N,Z,C,V)
+    //bandera de 0 (Z)
+    if(!cpu.a){
+        setsr(1);
+    }else{
+        unsetsr(1);
+    }
+    //Bandera para negativo (N)
+    if (cpu.a & 0b10000000){
+        setsr(7);
+    }else{
+        unsetsr(7);
+    }
+    //Bandera de carry(C)
+    if (diff < 0x100) {
+        setsr(0);
+    } else {
+        unsetsr(0);
+    }
+
+    //Bandera de overflow(V)
+    if(cpu.a == 255)setsr(6);//bandera del overflow
 }
 
 void sbczpg()

@@ -1,5 +1,5 @@
 !to "snake", cbm
-* = $aa00
+* = $0600
 ;  ___           _        __ ___  __ ___
 ; / __|_ _  __ _| |_____ / /| __|/  \_  )
 ; \__ \ ' \/ _` | / / -_) _ \__ \ () / /
@@ -79,12 +79,12 @@ generateApplePosition:
 
 
 loop:
-  ;jsr readKeys
-  ;jsr checkCollision
+  jsr readKeys
+  jsr checkCollision
   jsr updateSnake
-  jsr drawApple
-  jsr drawSnake
-  ;jsr spinWheels
+;  jsr drawApple
+;  jsr drawSnake
+  jsr spinWheels
   jmp loop
 
 
@@ -136,8 +136,8 @@ illegalMove:
 
 
 checkCollision:
-  ;jsr checkAppleCollision
-  ;jsr checkSnakeCollision
+  jsr checkAppleCollision
+;  jsr checkSnakeCollision
   rts
 
 
@@ -185,6 +185,8 @@ updateSnake:
   ldx snakeLength
   dex
   txa
+  nop
+  nop
 updateloop:
   lda snakeHeadL,x
   sta snakeBodyStart,x
@@ -240,7 +242,7 @@ left:
   beq collision
   rts
 collision:
-  ;jmp gameOver
+  jmp gameOver
 
 
 drawApple:

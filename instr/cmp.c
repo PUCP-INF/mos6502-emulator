@@ -51,8 +51,7 @@ void cmpzpgx()
 
 void cmpimm()
 {
-    uint8_t low = get_arg(1), high = get_arg(2), value = mem.ram[high][low];
-    setcmpflags(value);
+    setcmpflags(get_arg(1));
 }
 
 void cmpabsy()

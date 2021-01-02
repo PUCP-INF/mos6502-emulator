@@ -29,6 +29,11 @@ void lsrzpg()
 
 void lsra()
 {
+    if (cpu.a & 0b00000001){
+        setsr(0);
+    } else {
+        unsetsr(0);
+    }
     cpu.a >>=1;//lo dividimos entre 2
     //bandera de 0 (Z)
     if(!cpu.a){
@@ -39,9 +44,7 @@ void lsra()
     //Bandera para negativo (N)
     // se setea por defecto
     setsr(7);
-    if (cpu.a & 0b00000001){
-        setsr(0);
-    }
+
 }
 
 void lsrabs()

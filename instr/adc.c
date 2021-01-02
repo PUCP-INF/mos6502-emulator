@@ -65,34 +65,36 @@ void adcimm()
 {/*Para esta instruccion se tendra que sumar 1 al acumulador en caso el flag de
  * C(acarreo) tenga el bit encendido. En caso no lo sea, no agregamos nada*/
     uint8_t auxiliar = get_arg(1);//tomamos el valor inmmediato
-    cpu.a += auxiliar;//le agregamos ese valor al acumulador
+    uint16_t sum = (uint16_t)cpu.a + auxiliar;
+
     //verificamos el carry
     if (getsr(0)) {
-        cpu.a++;
+        sum++;
     }
+
     //luego tendremos que verificar las 4 banderas(N,Z,C,V)
     //bandera de 0 (Z)
-    if(!cpu.a){
+    if(!sum){
         setsr(1);
     }else{
         unsetsr(1);
     }
+
     //Bandera para negativo (N)
-    if (cpu.a & 0b10000000){
+    if (sum & 0b10000000){
         setsr(7);
     }else{
         unsetsr(7);
     }
-    //Bandera de carry(C)
 
-    if (getsr(0)){
+    //Bandera de carry
+    if(sum > 0xff) {
         setsr(0);
-    }else{
+    } else {
         unsetsr(0);
     }
-    //Bandera de overflow(V)
-    if(cpu.a > 256)setsr(6);//bandera del overflow
 
+    cpu.a = sum;
 }
 
 void adcabs()

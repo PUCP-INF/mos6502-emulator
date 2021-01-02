@@ -7,10 +7,8 @@
 #include <stdio.h>
 #include <gc/gc.h>
 #include <allegro5/allegro5.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_ttf.h>
+#include <ncurses.h>
 
 //Ver estrutura del cpu y de la mem
 struct CPU6502 cpu;
@@ -19,7 +17,6 @@ struct MEM6502 mem;
 ALLEGRO_TIMER* timer;
 ALLEGRO_EVENT_QUEUE* queue;
 ALLEGRO_DISPLAY* disp;
-ALLEGRO_FONT* font;
 
 void must_init(bool test, const char *description)
 {
@@ -32,14 +29,13 @@ void init_display()
 {
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/10.0);
+    timer = al_create_timer(1.0/1000.0);
     must_init(timer, "timer");
     queue = al_create_event_queue();
     must_init(queue, "queue");
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
     disp = al_create_display(640, 640);
-    font = al_create_builtin_font();
     must_init(disp, "display");
     must_init(al_init_primitives_addon(), "primitives");
     al_register_event_source(queue, al_get_keyboard_event_source());
@@ -60,6 +56,8 @@ void init_cpu()
             mem.ram[i][j] = 0;
         }
     }
+    initscr();
+    curs_set(0);
 }
 
 void run_program()
@@ -70,7 +68,6 @@ void run_program()
     bool done = false;
     bool redraw = true;
     ALLEGRO_EVENT event;
-    ALLEGRO_KEYBOARD_STATE ks;
 
     al_start_timer(timer);
     float x1 = 0, y1 = 0, x2 = 20, y2 = 20;
@@ -84,7 +81,7 @@ void run_program()
                 mem.ram[0][0xfe] = rand() % 256;
                 op_ind = fetch();
                 execute(op_ind);
-                fflush(stdout);
+                info_cpu();
                 redraw = true;
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
@@ -108,37 +105,40 @@ void run_program()
         if(redraw && al_is_event_queue_empty(queue)) {
             al_clear_to_color(al_map_rgb(0, 0, 0));
             ALLEGRO_COLOR white = al_map_rgb_f(1, 1, 1);
-            ALLEGRO_COLOR black = al_map_rgb_f(0, 0, 0);
+            ALLEGRO_COLOR red = al_map_rgb_f(1, 0, 0);
 
             // blanquear posiciones anteriores
             for (int i = 2; i <= 5; ++i) {
                 for (int j = 0; j < 256; ++j) {
-                    if (mem.ram[i][j] != 0x22) {
-                        mem.ram[i][j] = 0;
-                    }
+                    mem.ram[i][j] = 0;
                 }
             }
 
             // cabeza
             if (mem.ram[0][0x11] != 0 && mem.ram[0][0x10] != 0) {
-                mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 1;
+                mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 0x23;
             }
+
+            // cuerpo
+            uint8_t body = 0x12;
+            while (mem.ram[0][body+1] != 0) {
+                mem.ram[mem.ram[0][body+1]][mem.ram[0][body]] = 0x23;
+                body += 2;
+            }
+
             // manzana
             if (mem.ram[0][0x1] != 0 && mem.ram[0][0x0] != 0) {
                 mem.ram[mem.ram[0][0x1]][mem.ram[0][0x0]] = 0x22;
             }
-            char str[3];
+
             for (int i = 2; i <= 5; ++i) {
                 for (int j = 0; j < 256; ++j) {
-                    sprintf(str, "%02hhX", mem.ram[i][j]);
-                    al_draw_text(font, white, x1, y1, 0, str);
-//                    al_draw_filled_rectangle(x1, y1, x2, y2, white);
-//                    sprintf(str, "%02hhX", mem.ram[i][j]);
                     if (mem.ram[i][j]) {
-//                        al_draw_text(font, white, x1, y1, 0, str);
-//                        al_draw_filled_rectangle(x1, y1, x2, y2, white);
-                    } else {
-                        al_draw_filled_rectangle(x1, y1, x2, y2, black);
+                        if (mem.ram[i][j] == 0x22) {
+                            al_draw_filled_rectangle(x1, y1, x2, y2, red);
+                        } else if (mem.ram[i][j] == 0x23){
+                            al_draw_filled_rectangle(x1, y1, x2, y2, white);
+                        }
                     }
                     if (x2 == 640) {
                         y1 += 20;
@@ -149,7 +149,6 @@ void run_program()
                         x1 += 20;
                         x2 += 20;
                     }
-
                 }
             }
             x1 = 0; y1 = 0; x2 = 20; y2 = 20;
@@ -160,6 +159,7 @@ void run_program()
     al_destroy_display(disp);
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
+    endwin();
 }
 
 /*El load file carga el archivo binario del acme.
