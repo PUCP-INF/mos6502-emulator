@@ -82,6 +82,7 @@ loop:
   jsr readKeys
   jsr checkCollision
   jsr updateSnake
+  !byte $03     ; actualizar pantalla
 ;  jsr drawApple
 ;  jsr drawSnake
 ;  jsr spinWheels

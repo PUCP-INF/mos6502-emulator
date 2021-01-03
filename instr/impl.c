@@ -163,5 +163,5 @@ void dex()
 
 void nop()
 {
-    //DO NOTHING
+    for (int i = 0; i < 2; i++) i++;
 }
