@@ -82,6 +82,7 @@ loop:
   jsr readKeys
   jsr checkCollision
   jsr updateSnake
+  !byte $03     ; actualizar pantalla
 ;  jsr drawApple
 ;  jsr drawSnake
 ;  jsr spinWheels
@@ -137,7 +138,7 @@ illegalMove:
 
 checkCollision:
   jsr checkAppleCollision
-;  jsr checkSnakeCollision
+  jsr checkSnakeCollision
   rts
 
 
@@ -155,7 +156,6 @@ checkAppleCollision:
   jsr generateApplePosition
 doneCheckingAppleCollision:
   rts
-
 
 checkSnakeCollision:
   ldx #2 ;start with second segment
@@ -263,14 +263,14 @@ drawSnake:
   rts
 
 
-spinWheels:
-  ldx #0
-spinloop:
-  nop
-  nop
-  dex
-  bne spinloop
-  rts
+;spinWheels:
+;  ldx #0
+;spinloop:
+;  nop
+;  nop
+;  dex
+;  bne spinloop
+;  rts
 
 
 gameOver:

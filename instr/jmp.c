@@ -11,11 +11,12 @@ void jsrabs()
     uint8_t low, high;
     low = cpu.pcl;
     high = cpu.pch;
-    if ((int)low + 3 > 0xff) high += 1;
+    uint16_t res = low + 3;
+    if (res > 0xff) high += 1;
     push(low + 3);
     push(high);
-    cpu.pch = get_arg(2);
-    cpu.pcl = get_arg(1);
+    cpu.pch = get_arg(2);   // 7
+    cpu.pcl = get_arg(1);   // 2
     cpu.pcu = 1;
 }
 
