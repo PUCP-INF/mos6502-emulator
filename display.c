@@ -121,7 +121,6 @@ void update_pong(){
     //BALL
     if (mem.ram[0][0x8] != 0 || mem.ram[0][0x18] != 0) {
         mem.ram[mem.ram[0][0x8]][mem.ram[0][0x18]] = 0x23;
-        //corregir el borde
         if(mem.ram[0][0x8] == 0x02 && mem.ram[0][0x18] <=0x20)mem.ram[0][0xfd] = 1;//up
         if(mem.ram[0][0x8] == 0x05 && mem.ram[0][0x18] >=0xdf)mem.ram[0][0xfd] = 2;//down
         if((mem.ram[0][0x18]-0x1f)%0x20 ==0)mem.ram[0][0xfd] = 4;//right
