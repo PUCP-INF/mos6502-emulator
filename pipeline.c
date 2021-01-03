@@ -61,7 +61,7 @@ void updatepc(uint8_t numbytes)
 
 // look up table
 void (*opcode_func[256])(void) = {
-    brk, oraxind, info_cpu, update_display, NULL, orazpg, aslzpg, NULL, php, oraimmd, asla, NULL, NULL, oraabs, aslabs, NULL,
+    brk, oraxind, info_cpu, update_display, update_score, orazpg, aslzpg, NULL, php, oraimmd, asla, NULL, NULL, oraabs, aslabs, NULL,
     bpl, oraindy, NULL, NULL, NULL, orazpgx, aslzpgx, NULL, clc, oraabsy, NULL, NULL, NULL, oraabsx, aslabsx, NULL,
     jsrabs, andxind, NULL, NULL, bitzpg, andzpg, rolzpg, NULL, plp, andimm, rola, NULL, bitabs, andabs, rolabs, NULL,
     bmi, andindy, NULL, NULL, NULL, andzpgx, rolzpgx, NULL, sec, andabsy, NULL, NULL, NULL, andabsx, rolabsx, NULL,
@@ -80,7 +80,7 @@ void (*opcode_func[256])(void) = {
 };
 
 uint8_t opcode_bytes[256] = {
-        1, 2, 1, 1, 0, 2, 2, 0,
+        1, 2, 1, 1, 1, 2, 2, 0,
         1, 2, 1, 0, 0, 3, 3, 0,
         2, 2, 0, 0, 2, 2, 2, 0,
         1, 3, 1, 0, 3, 3, 3, 0,
