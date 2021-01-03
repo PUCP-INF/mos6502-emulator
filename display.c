@@ -1,6 +1,8 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
+#include <stdio.h>
+#include <math.h>
 
 #include "display.h"
 #include "cpu.h"
@@ -15,27 +17,25 @@ ALLEGRO_EVENT_QUEUE* queue;
 ALLEGRO_DISPLAY* disp;
 ALLEGRO_FONT* font;
 
-void must_init(bool test, const char *description)
+void update_score()
 {
-    if(test) return;
-//    printf("couldn't initialize %s\n", description);
-    exit(1);
+    mem.ram[0][0xf0]++;
+    // each apple adds operation overhead, increase game timer to keep game speed constant
+    double timersp = pow(al_get_timer_speed(timer), -1) + 200;
+    al_set_timer_speed(timer, 1 / timersp);
 }
 
 void init_display()
 {
-    must_init(al_init(), "allegro");
-    must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/400.0);
-    must_init(timer, "timer");
+    al_init();
+    al_install_keyboard();
+    timer = al_create_timer(1.0/1000.0);
     queue = al_create_event_queue();
-    must_init(queue, "queue");
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
     disp = al_create_display(640, 650);
     font = al_create_builtin_font();
-    must_init(disp, "display");
-    must_init(al_init_primitives_addon(), "primitives");
+    al_init_primitives_addon();
     al_register_event_source(queue, al_get_keyboard_event_source());
     al_register_event_source(queue, al_get_display_event_source(disp));
     al_register_event_source(queue, al_get_timer_event_source(timer));
@@ -71,6 +71,11 @@ void update_snake()
     if (mem.ram[0][0x1] != 0 && mem.ram[0][0x0] != 0) {
         mem.ram[mem.ram[0][0x1]][mem.ram[0][0x0]] = 0x22;
     }
+
+    // puntaje
+    char snum[30];
+    sprintf(snum, "Puntaje: %d", mem.ram[0][0xf0] * 100);
+    al_draw_text(font, white, 0, 640, 0, snum);
 
     for (int i = 2; i <= 5; ++i) {
         for (int j = 0; j < 256; ++j) {
@@ -128,7 +133,7 @@ void update_pong(){
     }
 
     if((mem.ram[0][0x18]-0x1d)%0x20 ==0)mem.ram[0x00][0x06]+=0x01;
-    char text[5];
+    char text[30];
     sprintf(text,"el puntaje es : %d",mem.ram[0x00][0x06]);
     al_draw_text(font, al_map_rgb(255, 255, 255), 260, 640, 0, text);
     for (int i = 2; i <= 5; ++i) {

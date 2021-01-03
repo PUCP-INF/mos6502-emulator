@@ -8,5 +8,6 @@
 void init_display();
 void update_display();
 void delete_display();
+void update_score();
 
 #endif //MOS6502_DISPLAY_H

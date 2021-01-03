@@ -153,6 +153,7 @@ checkAppleCollision:
   ;eat apple
   inc snakeLength
   inc snakeLength ;increase length
+  !byte $04
   jsr generateApplePosition
 doneCheckingAppleCollision:
   rts

@@ -31,7 +31,7 @@ void staabs()
 void staindy()
 {
     uint8_t dm = get_arg(1);
-    uint8_t high=mem.ram[0][dm+1];
+    uint16_t high=mem.ram[0][dm+1];
     uint8_t low=mem.ram[0][dm];
     uint16_t offset =(high & 0xff00)+low+cpu.y;
     mem.ram[offset & 0xff00][offset & 0x00ff]=cpu.a;
