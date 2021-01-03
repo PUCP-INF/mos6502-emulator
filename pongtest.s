@@ -1,3 +1,6 @@
+!to "pongtest", cbm
+
+
 * = $0600
 
 vectordirX = $20
@@ -20,17 +23,22 @@ crashDownborder = $02
 crashRightborder = $04
 crashLeftborder = $08
 
+score = $06
+
+canmove = $30
+distance = $03
+
 border = $fd
 
 init:
+lda #$02
+sta canmove
 lda #$02 ; ypos
 sta ballposY ; ball
 lda #$01 ; ypos
 sta player1posY ; plr1
 lda #$1e ; ypos
 sta IAposY ; plr2
-;lda #$1f ; xpos
-;sta IAposX ; plr2
 lda #$04
 sta IAposX ; plr2
 sta ballposX ; ball
@@ -40,15 +48,18 @@ lda #$01
 sta vectordirX ; xdir (ball)
 lda #$01
 sta vectordirY ; ydir (ball)
+lda #$1b
+sta distance
+lda #$00
+sta score
+
 
 mainloop:
 !byte $03
 jsr checkcollisions
 jsr readkeys
 jsr getmovesball
-
-
-
+jsr playerseeker
 jmp mainloop
 
 getmovesball:
@@ -137,8 +148,8 @@ playerdowndown:
 
 checkcollisions:
 jsr checkbordercollitions
-;jsr checkplayercollision
-;jsr checkcomputercollision
+jsr checkplayercollision
+jsr checkcomputercollision
 rts
 checkbordercollitions:
 lda border
@@ -161,4 +172,66 @@ lda #$01
 sta vectordirX
 rts
 
+checkplayercollision:
+lda ballposX
+cmp IAposX
+beq maycolliteIa  ;IA somos los jugadores crack
+rts
+maycolliteIa:
+lda ballposY
+clc
+adc #$01
+cmp IAposY
+beq didcolliteIA
+rts
+didcolliteIA:
+lda #$02
+sta vectordirY
+lda #$01
+sta canmove
+
+rts
+
+checkcomputercollision:
+lda ballposX
+cmp player1posX
+beq maycolliteplayer  ;player es la compu crack
+rts
+maycolliteplayer:
+lda ballposY
+sec
+sbc #$01
+cmp player1posY
+beq didcolliteplayer
+rts
+didcolliteplayer:
+lda #$01
+sta vectordirY
+rts
+
+playerseeker:
+lda distance
+cmp #$01
+beq dontmove
+lda canmove
+cmp #$01
+beq domove
+rts
+domove:
+sec
+lda distance
+sbc #$01
+sta distance
+lda ballposX
+sta player1posX
+lda ballposY
+sbc distance
+sta player1posY
+rts
+dontmove:
+lda #$1b
+sta distance
+lda #$02
+sta canmove
+rts
 gameOver:

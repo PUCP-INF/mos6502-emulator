@@ -26,13 +26,13 @@ void init_display()
 {
     must_init(al_init(), "allegro");
     must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/60.0);
+    timer = al_create_timer(1.0/400.0);
     must_init(timer, "timer");
     queue = al_create_event_queue();
     must_init(queue, "queue");
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-    disp = al_create_display(640, 640);
+    disp = al_create_display(640, 650);
     font = al_create_builtin_font();
     must_init(disp, "display");
     must_init(al_init_primitives_addon(), "primitives");
@@ -123,13 +123,15 @@ void update_pong(){
         mem.ram[mem.ram[0][0x8]][mem.ram[0][0x18]] = 0x23;
         //corregir el borde
         if(mem.ram[0][0x8] == 0x02 && mem.ram[0][0x18] <=0x20)mem.ram[0][0xfd] = 1;//up
-        //if(mem.ram[0][0x8] == 0x02 && mem.ram[0][0x18] <=0x20)mem.ram[0][0x20] = 0x02;
         if(mem.ram[0][0x8] == 0x05 && mem.ram[0][0x18] >=0xdf)mem.ram[0][0xfd] = 2;//down
         if((mem.ram[0][0x18]-0x1f)%0x20 ==0)mem.ram[0][0xfd] = 4;//right
         if(mem.ram[0][0x18]%0x20 ==0)mem.ram[0][0xfd] = 8;//left
     }
 
-
+    if((mem.ram[0][0x18]-0x1d)%0x20 ==0)mem.ram[0x00][0x06]+=0x01;
+    char text[5];
+    sprintf(text,"el puntaje es : %d",mem.ram[0x00][0x06]);
+    al_draw_text(font, al_map_rgb(255, 255, 255), 260, 640, 0, text);
     for (int i = 2; i <= 5; ++i) {
         for (int j = 0; j < 256; ++j) {
             if (mem.ram[i][j]) {
