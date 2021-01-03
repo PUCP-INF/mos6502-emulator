@@ -1,59 +1,31 @@
-#include "init.h"
-#include "cpu.h"
-#include "pipeline.h"
-#include "debug.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <gc/gc.h>
+#include <time.h>
 #include <allegro5/allegro5.h>
-#include <allegro5/allegro_primitives.h>
-
 #ifdef __MINGW64__
 #   include <ncurses/ncurses.h>
 #else
 #   include <ncurses.h>
 #endif
 
+#include "init.h"
+#include "cpu.h"
+#include "pipeline.h"
+#include "debug.h"
+#include "display.h"
+
+extern ALLEGRO_TIMER* timer;
+extern ALLEGRO_EVENT_QUEUE* queue;
+
 //Ver estrutura del cpu y de la mem
 struct CPU6502 cpu;
 struct MEM6502 mem;
 
-ALLEGRO_TIMER* timer;
-ALLEGRO_EVENT_QUEUE* queue;
-ALLEGRO_DISPLAY* disp;
-
 void end_cpu()
 {
-    al_destroy_display(disp);
-    al_destroy_timer(timer);
-    al_destroy_event_queue(queue);
+    delete_display();
     endwin();
-}
-
-void must_init(bool test, const char *description)
-{
-    if(test) return;
-    printf("couldn't initialize %s\n", description);
-    exit(1);
-}
-
-void init_display()
-{
-    must_init(al_init(), "allegro");
-    must_init(al_install_keyboard(), "keyboard");
-    timer = al_create_timer(1.0/1500.0);
-    must_init(timer, "timer");
-    queue = al_create_event_queue();
-    must_init(queue, "queue");
-    al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
-    al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-    disp = al_create_display(640, 640);
-    must_init(disp, "display");
-    must_init(al_init_primitives_addon(), "primitives");
-    al_register_event_source(queue, al_get_keyboard_event_source());
-    al_register_event_source(queue, al_get_display_event_source(disp));
-    al_register_event_source(queue, al_get_timer_event_source(timer));
 }
 
 void init_cpu()
@@ -83,7 +55,6 @@ void run_program()
     ALLEGRO_EVENT event;
 
     al_start_timer(timer);
-    float x1 = 0, y1 = 0, x2 = 20, y2 = 20;
     while (1) {
         al_wait_for_event(queue, &event);
 
@@ -95,7 +66,6 @@ void run_program()
                 op_ind = fetch();
                 execute(op_ind);
                 info_cpu();
-                redraw = true;
                 break;
             case ALLEGRO_EVENT_KEY_DOWN:
                 if (event.keyboard.keycode == ALLEGRO_KEY_W)
@@ -113,61 +83,6 @@ void run_program()
         }
 
         if (done) break;
-
-        // $02 - $05
-        if(redraw && al_is_event_queue_empty(queue)) {
-            al_clear_to_color(al_map_rgb(0, 0, 0));
-            ALLEGRO_COLOR white = al_map_rgb_f(1, 1, 1);
-            ALLEGRO_COLOR red = al_map_rgb_f(1, 0, 0);
-
-            // blanquear posiciones anteriores
-            for (int i = 2; i <= 5; ++i) {
-                for (int j = 0; j < 256; ++j) {
-                    mem.ram[i][j] = 0;
-                }
-            }
-
-            // cabeza
-            if (mem.ram[0][0x11] != 0 && mem.ram[0][0x10] != 0) {
-                mem.ram[mem.ram[0][0x11]][mem.ram[0][0x10]] = 0x23;
-            }
-
-            // cuerpo
-            uint8_t body = 0x12;
-            while (mem.ram[0][body+1] != 0) {
-                mem.ram[mem.ram[0][body+1]][mem.ram[0][body]] = 0x23;
-                body += 2;
-            }
-
-            // manzana
-            if (mem.ram[0][0x1] != 0 && mem.ram[0][0x0] != 0) {
-                mem.ram[mem.ram[0][0x1]][mem.ram[0][0x0]] = 0x22;
-            }
-
-            for (int i = 2; i <= 5; ++i) {
-                for (int j = 0; j < 256; ++j) {
-                    if (mem.ram[i][j]) {
-                        if (mem.ram[i][j] == 0x22) {
-                            al_draw_filled_rectangle(x1, y1, x2, y2, red);
-                        } else if (mem.ram[i][j] == 0x23){
-                            al_draw_filled_rectangle(x1, y1, x2, y2, white);
-                        }
-                    }
-                    if (x2 == 640) {
-                        y1 += 20;
-                        y2 += 20;
-                        x1 = 0;
-                        x2 = 20;
-                    } else {
-                        x1 += 20;
-                        x2 += 20;
-                    }
-                }
-            }
-            x1 = 0; y1 = 0; x2 = 20; y2 = 20;
-            al_flip_display();
-            redraw = false;
-        }
     }
 }
 

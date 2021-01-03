@@ -10,6 +10,7 @@ find_package(Curses REQUIRED)
 pkg_check_modules(GC REQUIRED IMPORTED_TARGET bdw-gc)
 pkg_check_modules(ALG REQUIRED allegro-5)
 pkg_check_modules(ALGPRIM REQUIRED allegro_primitives-5)
+pkg_check_modules(ALGFONT REQUIRED allegro_font-5)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/instr)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -71,11 +72,12 @@ add_executable(cpu
         instr/sbc.c
         instr/sbc.h
         instr/inc.c
-        instr/inc.h)
+        instr/inc.h display.c display.h)
 
 target_link_libraries(cpu PUBLIC
         ${ALG_LIBRARIES}
         ${ALGPRIM_LIBRARIES}
+        ${ALGFONT_LIBRARIES}
         ${GC_LIBRARIES}
         ${CURSES_LIBRARY}
         m
