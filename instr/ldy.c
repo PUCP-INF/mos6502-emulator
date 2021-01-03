@@ -10,23 +10,52 @@ void ldyimm()
     uint8_t value_mem = get_arg(1);
     cpu.y=value_mem;
 
-    if(cpu.y==0)
+    if(cpu.y==0) {
         setsr(1);
+    } else {
+        unsetsr(1);
+    }
 
-    if(cpu.y & 0b10000000)
+
+    if(cpu.y & 0b10000000) {
         setsr(7);
+    } else {
+        unsetsr(7);
+    }
+
 }
 
 void ldyzpg()
 {
     uint8_t offset = get_arg(1);
     cpu.y = mem.ram[0][offset];
+    if(!cpu.y)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.y & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
 }
 
 void ldyzpgx()
 {
     uint8_t offset = get_arg(1) + cpu.x;
     cpu.y=mem.ram[0][offset];
+
+    if(!cpu.y)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.y & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
 }
 
 void ldyabs()

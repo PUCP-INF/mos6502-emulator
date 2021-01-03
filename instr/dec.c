@@ -9,18 +9,30 @@
 void deczpg()
 {
     uint8_t offset = get_arg(1);
-    mem.ram[0][offset] -= 1;
+    uint16_t res = mem.ram[0][offset] - 1;
+    if (res == 0) {
+        setsr(1);
+    } else {
+        unsetsr(1);
+    }
+    if (res & 0b10000000) {
+        setsr(7);
+    } else {
+        unsetsr(7);
+    }
+    mem.ram[0][offset] = res;
 }
 
 void deczpgx()
 {
     uint8_t offset = get_arg(1) ;
-    cpu.x +=1;
-    mem.ram[0][offset] -= 1;
+    mem.ram[0][offset+cpu.x] -= 1;
     //modify N flag
-    if(mem.ram[0][offset]>127)setsr(7);
+    if(mem.ram[0][offset+cpu.x]>127)setsr(7);
+    else setsr(0);
     //modify z flag
-    if(mem.ram[0][offset]==0)setsr(1);
+    if(mem.ram[0][offset+cpu.x]==0)setsr(1);
+    else setsr(1);
 }
 
 void decabs()

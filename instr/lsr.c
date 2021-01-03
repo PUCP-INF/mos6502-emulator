@@ -29,6 +29,11 @@ void lsrzpg()
 
 void lsra()
 {
+    if (cpu.a & 0b00000001){
+        setsr(0);
+    } else {
+        unsetsr(0);
+    }
     cpu.a >>=1;//lo dividimos entre 2
     //bandera de 0 (Z)
     if(!cpu.a){
@@ -39,9 +44,7 @@ void lsra()
     //Bandera para negativo (N)
     // se setea por defecto
     setsr(7);
-    if (cpu.a & 0b00000001){
-        setsr(0);
-    }
+
 }
 
 void lsrabs()
@@ -50,12 +53,14 @@ void lsrabs()
     uint8_t low = get_arg(1);
     uint8_t high = get_arg(2);
     memory = mem.ram[high][low];
-    mem.ram[high][low] = memory>>1;
 
-    if(getsr(0))
+    if(memory & 0b00000001)
         setsr(0);
     else
         unsetsr(0);
+
+    mem.ram[high][low] = memory>>1;
+
 
     if(!cpu.a)//Analizamos el 0 flag
         setsr(1);
@@ -100,6 +105,12 @@ void lsrabsx()
     high=offset/256;
     low=offset%256;
     memory = mem.ram[high][low];
+
+    if(memory & 0b00000001)
+        setsr(0);
+    else
+        unsetsr(0);
+
     mem.ram[high][low] = memory>>1;
 
     if(getsr(0))
