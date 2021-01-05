@@ -161,7 +161,7 @@ void update_pong(){
 
 void update_display()
 {
-    //update_snake();
+//    update_snake();
     update_pong();
 }
 
