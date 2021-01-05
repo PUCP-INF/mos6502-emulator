@@ -1,10 +1,10 @@
 #Para installar el cmake, acme  y librerias
-sudo apt install libgc-dev git build-essential wget
+sudo apt install libgc-dev git build-essential wget acme
 wget https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-Linux-x86_64.tar.gz
 untar xf cmake-3.18.4-Linux-x86_64.tar.gz
 export PATH=$PATH:$PWD/cmake-3.18.4-Linux-x86_64/bin/
-wget https://github.com/PUCP-INF/mos6502-emulator/releases/download/0.1/acme_0.96.4-5_amd64.deb
-sudo dpkg -i acme_0.96.4-5_amd64.deb
+#wget https://github.com/PUCP-INF/mos6502-emulator/releases/download/0.1/acme_0.96.4-5_amd64.deb
+#sudo dpkg -i acme_0.96.4-5_amd64.deb
 #Para instalar la libreria grafica de allegro
 sudo add-apt-repository ppa:allegro/5.2
 sudo apt update
