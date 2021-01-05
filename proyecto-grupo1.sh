@@ -29,4 +29,4 @@ acme ../pongtest.s
 #Para el snake
 #./cpu ../snake
 #Para el pongtest
-./cpu ../pongtest
+./cpu pongtest
