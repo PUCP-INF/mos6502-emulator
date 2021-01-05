@@ -46,6 +46,17 @@ void ldazpg()
 {
     uint8_t offset = get_arg(1);
     cpu.a = mem.ram[0][offset];
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+
 }
 
 void ldazpgx()
@@ -71,6 +82,17 @@ void ldazpgx()
 void ldaimm()
 {   //en esta funcion le asigno al registro a el valor de getarg
     cpu.a = get_arg(1);//
+
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
 }
 
 void ldaabsy()
@@ -78,10 +100,22 @@ void ldaabsy()
     uint8_t low = get_arg(1), high = get_arg(2);
     if(low+cpu.y>255){
         high++;
-        cpu.x=mem.ram[high][low+cpu.y-255];
+        cpu.a=mem.ram[high][low+cpu.y-255];
     }else {
-        cpu.x = mem.ram[high][low + cpu.y];
+        cpu.a = mem.ram[high][low + cpu.y];
     }
+
+    if(!cpu.a)//Analizamos el 0 flag
+        setsr(1);
+    else
+        unsetsr(1);
+
+    if(cpu.a & 0b10000000)//Analizamos el negative flag
+        setsr(7);
+    else
+        unsetsr(7);
+
+
 }
 
 void ldaabs()

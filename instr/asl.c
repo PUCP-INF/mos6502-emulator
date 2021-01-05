@@ -30,8 +30,15 @@ void aslzpg()
 }
 
 void asla()
-{//shift left one bit del acumulador
+{//shift left one bit del acumulado
+
+    if(cpu.a & 0b10000000)
+        setsr(0);
+    else
+        unsetsr(0);
+
     cpu.a= cpu.a<<1;//lo multiplicamos x2
+
     //bandera de 0 (Z)
     if(!cpu.a){
         setsr(1);
@@ -58,12 +65,14 @@ void aslabs()
     uint8_t low = get_arg(1);
     uint8_t high = get_arg(2);
     memory = mem.ram[high][low];
-    mem.ram[high][low] = memory<<1;
 
-    if(getsr(7))
+    if(memory & 0b10000000)
         setsr(0);
     else
         unsetsr(0);
+
+    mem.ram[high][low] = memory<<1;
+
 
     if(!cpu.a)//Analizamos el 0 flag
         setsr(1);
@@ -110,12 +119,15 @@ void aslabsx()
     high=offset/256;
     low=offset%256;
     memory = mem.ram[high][low];
-    mem.ram[high][low] = memory<<1;
 
-    if(getsr(7))
+    if(memory & 0b10000000)
         setsr(0);
     else
         unsetsr(0);
+
+
+    mem.ram[high][low] = memory<<1;
+
 
     if(!cpu.a)//Analizamos el 0 flag
         setsr(1);
