@@ -1,33 +1,27 @@
 !to "snake", cbm
 * = $0600
-;  ___           _        __ ___  __ ___
-; / __|_ _  __ _| |_____ / /| __|/  \_  )
-; \__ \ ' \/ _` | / / -_) _ \__ \ () / /
-; |___/_||_\__,_|_\_\___\___/___/\__/___|
+;Para mover la serpiente mover las teclas A, W, S y D
+appleL =        $00
+appleH =        $01
+snakeHeadL =    $10
+snakeHeadH =    $11
+snakeBodyStart= $12
+snakeDirection= $02
+snakeLength =   $03
 
-; Change direction: W A S D
-
-appleL =        $00 ; screen location of apple, low byte
-appleH =        $01 ; screen location of apple, high byte
-snakeHeadL =    $10 ; screen location of snake head, low byte
-snakeHeadH =    $11 ; screen location of snake head, high byte
-snakeBodyStart= $12 ; start of snake body byte pairs
-snakeDirection= $02 ; direction (possible values are below)
-snakeLength =   $03 ; snake length, in bytes
-
-; Directions (each using a separate bit)
+;Direcciones
 movingUp =     1
 movingRight =  2
 movingDown =   4
 movingLeft =   8
 
-; ASCII values of keys controlling the snake
+; valores ASCII de las teclas para manejar la serpiente
 ASCII_w =    $77
 ASCII_a =    $61
 ASCII_s =    $73
 ASCII_d =    $64
 
-; System variables
+
 sysRandom  = $fe
 sysLastKey = $ff
 
@@ -42,10 +36,10 @@ init:
 
 
 initSnake:
-  lda #movingRight  ;start direction
+  lda #movingRight  ;posicion inicial
   sta snakeDirection
 
-  lda #4  ;start length (2 segments)
+  lda #4  ;longitud de inicio(2 segmentos)
   sta snakeLength
 
   lda #$11
@@ -55,23 +49,23 @@ initSnake:
   sta snakeBodyStart
 
   lda #$0f
-  sta $14 ; body segment 1
+  sta $14 ; segmento de cuerpo 1
 
   lda #$04
   sta snakeHeadH
-  sta $13 ; body segment 1
-  sta $15 ; body segment 2
+  sta $13 ; segmento de cuerpo 1
+  sta $15 ; segmento de cuerpo 2
   rts
 
 
 generateApplePosition:
-  ;load a new random byte into $00
+  ;cargamos un byte random en $00
   lda sysRandom
   sta appleL
 
-  ;load a new random number from 2 to 5 into $01
+  ;cargamos un nuevo byte random de  2 a 5 en $01
   lda sysRandom
-  and #$03 ;mask out lowest 2 bits
+  and #$03 ;enmascaramos los 2 bytes menos significativos
   clc
   adc #2
   sta appleH
@@ -83,9 +77,6 @@ loop:
   jsr checkCollision
   jsr updateSnake
   !byte $03     ; actualizar pantalla
-;  jsr drawApple
-;  jsr drawSnake
-;  jsr spinWheels
   jmp loop
 
 
@@ -150,16 +141,16 @@ checkAppleCollision:
   cmp snakeHeadH
   bne doneCheckingAppleCollision
 
-  ;eat apple
+  ;comer manzanita
   inc snakeLength
-  inc snakeLength ;increase length
+  inc snakeLength ;incrementar tamanhio de la serpiente
   !byte $04
   jsr generateApplePosition
 doneCheckingAppleCollision:
   rts
 
 checkSnakeCollision:
-  ldx #2 ;start with second segment
+  ldx #2 ;
 snakeCollisionLoop:
   lda snakeHeadL,x
   cmp snakeHeadL
@@ -173,7 +164,7 @@ maybeCollided:
 continueCollisionLoop:
   inx
   inx
-  cpx snakeLength          ;got to last section with no collision
+  cpx snakeLength
   beq didntCollide
   jmp snakeCollisionLoop
 
@@ -256,22 +247,12 @@ drawApple:
 drawSnake:
   ldx snakeLength
   lda #0
-  sta (snakeHeadL,x) ; erase end of tail
+  sta (snakeHeadL,x) ; eliminamos el final de la cola de la serpiente
 
   ldx #0
   lda #1
-  sta (snakeHeadL,x) ; paint head
+  sta (snakeHeadL,x) ; pintamos la cabeza de la serpiente
   rts
-
-
-;spinWheels:
-;  ldx #0
-;spinloop:
-;  nop
-;  nop
-;  dex
-;  bne spinloop
-;  rts
 
 
 gameOver:
