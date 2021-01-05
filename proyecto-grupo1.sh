@@ -27,6 +27,6 @@ acme ../pongtest.s
 
 #Luego, colocarce en la carpeta cmake-build-debug y abrir en el terminal y ejecutar segun el juego que se quiera
 #Para el snake
-#./cpu ../snake
+#./cpu snake
 #Para el pongtest
 ./cpu pongtest
